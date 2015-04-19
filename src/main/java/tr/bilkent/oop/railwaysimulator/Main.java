@@ -7,6 +7,7 @@ package tr.bilkent.oop.railwaysimulator;
  */
 public class Main {
     public static void main(String[] args) {
-        System.out.println( "Hello World. I'm a railway simulator.");
+        System.out.println("Hello World. I'm a railway simulator.");
     }
+
 }
