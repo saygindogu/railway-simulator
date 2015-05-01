@@ -1,6 +1,8 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
-import tr.bilkent.oop.railwaysimulator.model.Identity;
+import tr.bilkent.oop.railwaysimulator.model.identity.Identity;
+import tr.bilkent.oop.railwaysimulator.model.identity.IdentityFactory;
+import tr.bilkent.oop.railwaysimulator.model.identity.StationIdentityFactory;
 
 import javax.swing.text.Position;
 import java.io.Serializable;
@@ -14,5 +16,10 @@ public class Station implements Serializable {
     private String name;
     private transient List<Track> tracks;
     private List<Position> positions;
+
+    public Station( String name){
+        IdentityFactory factory = StationIdentityFactory.getInstance();
+
+    }
 
 }
