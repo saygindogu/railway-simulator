@@ -1,8 +1,7 @@
 package tr.bilkent.oop.railwaysimulator.model;
 
-import javafx.collections.transformation.SortedList;
-import sun.reflect.generics.tree.Tree;
 import tr.bilkent.oop.railwaysimulator.model.identity.IdentityComparator;
+import tr.bilkent.oop.railwaysimulator.model.railwaysystem.RailwaySystem;
 import tr.bilkent.oop.railwaysimulator.model.user.User;
 import tr.bilkent.oop.railwaysimulator.model.identity.Identity;
 
@@ -19,6 +18,10 @@ public class RSim implements Serializable {
     private static transient RSim instance;
     List<User> userDatabase;
     Set<Identity> identityDatabase;
+
+    RailwaySystem currentSystem;
+    User currentUser = null;
+
 
     private RSim(){
         userDatabase = new ArrayList<User>();

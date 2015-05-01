@@ -1,5 +1,7 @@
 package tr.bilkent.oop.railwaysimulator.model;
 
+import tr.bilkent.oop.railwaysimulator.model.railwaysystem.RailwaySystem;
+
 /**
  * Created by saygin on 4/19/2015.
  */
@@ -17,5 +19,9 @@ public class Simulation {
             instance = new Simulation();
         }
         return instance;
+    }
+
+    public void simulate( RailwaySystem system){
+        //TODO
     }
 }
