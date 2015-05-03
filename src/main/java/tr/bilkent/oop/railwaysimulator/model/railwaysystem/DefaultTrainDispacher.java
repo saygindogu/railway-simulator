@@ -5,8 +5,9 @@ package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
  */
 public class DefaultTrainDispacher implements TrainDispacherImpl {
 
+
     @Override
     public void dispach() {
-        //TODO...
+        //TODO... probably start timer here
     }
 }

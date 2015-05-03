@@ -6,7 +6,17 @@ package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 public class Waggon {
     private int capacity;
 
-    public Waggon(int capacity) {
+    private Waggon(int capacity) {
+
         this.capacity = capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public int getCapacity() {
+
+        return capacity;
     }
 }

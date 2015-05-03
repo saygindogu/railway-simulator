@@ -3,11 +3,11 @@ package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 /**
  * Created by saygin on 4/19/2015.
  */
-public class TrainAbtractDispacher extends AbtractDispacher {
+public class AbtractTrainDispacher extends AbtractDispacher {
 
     private TrainDispacherImpl implementation;
 
-    public TrainAbtractDispacher(){
+    public AbtractTrainDispacher(){
         implementation = new DefaultTrainDispacher();
 
     }

@@ -7,7 +7,7 @@ import java.util.TreeSet;
 /**
  * Created by saygin on 5/1/2015.
  */
-public class UserIdentityFactory {
+public class UserIdentityFactory implements IdentityFactory{
 
 
     private static UserIdentityFactory instance;
