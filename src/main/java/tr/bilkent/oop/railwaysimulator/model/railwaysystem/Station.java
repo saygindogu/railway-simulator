@@ -19,7 +19,7 @@ public class Station implements Serializable {
     private List<Position> positions; // positions on tracks
     private List<Integer> maxNumberOfWaggonsAtPerons;
 
-    protected Station( String name, Track track, Position position){
+    public Station( String name, Track track, Position position){
         IdentityFactory factory = StationIdentityFactory.getInstance();
         identity = factory.newIdentity();
 
@@ -32,7 +32,7 @@ public class Station implements Serializable {
         maxNumberOfWaggonsAtPerons.add( DEFAULT_MAX_NUM_WAGGONS);
     }
 
-    protected Station( String name, Track track, Position position, int maxNumberOfWaggons){
+    public Station( String name, Track track, Position position, int maxNumberOfWaggons){
         IdentityFactory factory = StationIdentityFactory.getInstance();
         identity = factory.newIdentity();
 
