@@ -18,6 +18,7 @@ public class Station implements Serializable {
     private transient List<Track> tracks;
     private List<Position> positions; // positions on tracks
     private List<Integer> maxNumberOfWaggonsAtPerons;
+    private TrainDispacherImpl trainDispacher;
 
     public Station( String name, Track track, Position position){
         IdentityFactory factory = StationIdentityFactory.getInstance();
@@ -30,6 +31,7 @@ public class Station implements Serializable {
         tracks.add(track);
         positions.add(position);
         maxNumberOfWaggonsAtPerons.add( DEFAULT_MAX_NUM_WAGGONS);
+        trainDispacher = null;
     }
 
     public Station( String name, Track track, Position position, int maxNumberOfWaggons){
@@ -42,7 +44,8 @@ public class Station implements Serializable {
         maxNumberOfWaggonsAtPerons = new ArrayList<Integer>(1);
         tracks.add(track);
         positions.add(position);
-        maxNumberOfWaggonsAtPerons.add( maxNumberOfWaggons);
+
+        trainDispacher = null;
     }
 
     protected void addThisTo( Track track, Position position){
@@ -80,11 +83,41 @@ public class Station implements Serializable {
         else throw new StationNotInTrackException();
     }
 
+    protected void setTrainDispacher( TrainDispacherImpl dispacher){
+        this.trainDispacher = dispacher;
+    }
+
+    protected void addTrain( Train train){
+        if( trainDispacher == null ){
+            throw new NoTrainDispacherException();
+        }
+        else{
+            trainDispacher.addTrain( train);
+        }
+    }
+
     public Identity getIdentity() {
+
         return identity;
     }
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Station station = (Station) o;
+
+        return getIdentity().equals(station.getIdentity());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getIdentity().hashCode();
     }
 }

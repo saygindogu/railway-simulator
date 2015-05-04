@@ -19,5 +19,24 @@ public class Identity {
         this.id = id;
         this.type = type;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Identity identity = (Identity) o;
+
+        if (getId() != identity.getId()) return false;
+        return getType() == identity.getType();
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (getId() ^ (getId() >>> 32));
+        result = 31 * result + getType().hashCode();
+        return result;
+    }
 }
 

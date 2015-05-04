@@ -17,7 +17,7 @@ public class SimplePosition extends Position {
         else throw new UnknownComparisonException();
     }
 
-    protected int getDistanceFrom(SimplePosition other){
+    protected int getDistanceFrom( SimplePosition other){
         return Math.abs( other.distance - distance);
     }
 }

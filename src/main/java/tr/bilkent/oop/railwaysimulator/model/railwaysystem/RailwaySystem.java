@@ -3,13 +3,14 @@ package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 import tr.bilkent.oop.railwaysimulator.model.user.User;
 import tr.bilkent.oop.railwaysimulator.model.user.UserGroup;
 
+import java.io.Serializable;
 import java.util.List;
 
 
 /**
  * Created by saygin on 4/19/2015.
  */
-public class RailwaySystem {
+public class RailwaySystem implements Serializable {
     private User owner;
     private UserGroup group;
     private RailwayPermissions permissions;
@@ -41,21 +42,31 @@ public class RailwaySystem {
         return owner;
     }
 
-    public List<Track> getTracks() {
+    protected List<Track> getTracks() {
         return tracks;
     }
 
-    public void setGroup(UserGroup group) {
+    protected void setGroup(UserGroup group) {
         this.group = group;
     }
 
-    public void setPermissions(RailwayPermissions permissions) {
+    protected void setPermissions(RailwayPermissions permissions) {
         this.permissions = permissions;
     }
 
-    public RailwayPermissions getPermissions() {
+    protected RailwayPermissions getPermissions() {
         return permissions;
     }
 
 
+    public boolean contains(Station station) {
+        for (Track track : tracks) {
+            for (Station nativeStation : track.getStations()) {
+                if( station.equals( nativeStation) )
+                    return true;
+            }
+        }
+        return false;
+
+    }
 }

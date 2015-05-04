@@ -1,9 +1,11 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
+import java.io.Serializable;
+
 /**
  * Created by saygin on 5/4/2015.
  */
-public class RailwayPermissions {
+public class RailwayPermissions implements Serializable {
     public static final int GROUP = 0;
     public static final int OTHERS = 1;
     public static final int OPEN = 0;
@@ -39,5 +41,11 @@ public class RailwayPermissions {
         }
     }
 
+    public boolean[] getGroupPermissions() {
+        return group;
+    }
 
+    public boolean[] getOthersPermissions() {
+        return others;
+    }
 }

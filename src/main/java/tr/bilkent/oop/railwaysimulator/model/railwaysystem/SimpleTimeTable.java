@@ -3,33 +3,37 @@ package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by saygin on 5/3/2015.
+ *
+ * This class is highly coupled with SimpleTime, all AbstractTime objects should be of type SimpleTime.
+ * It might not be safe to use other instances of AbstractTime.
  */
 public class SimpleTimeTable extends AbstractTimeTable {
     public static final int DEFAULT_REPETITION = 1000;
-    private List<SimpleTime> times;
+    private List<AbstractTime> times;
     private long period;
     private int last;
 
-    protected SimpleTimeTable( List<SimpleTime> times){
+    protected SimpleTimeTable( List<AbstractTime> times){
         this.times = times;
         period = 0;
         last = times.size();
     }
 
-    protected SimpleTimeTable( SimpleTime base, long period){
-        times = new ArrayList<SimpleTime>(1);
+    protected SimpleTimeTable( AbstractTime base, AbstractTime period){
+        times = new ArrayList<AbstractTime>(1);
         times.add(base);
-        this.period = period;
+        this.period = period.getTimestamp();
         last = DEFAULT_REPETITION;
     }
 
-    protected SimpleTimeTable( SimpleTime base, long period, int repetitionCount){
-        times = new ArrayList<SimpleTime>(1);
+    protected SimpleTimeTable( AbstractTime base, long period, int repetitionCount){
+        times = new ArrayList<AbstractTime>(1);
         times.add(base);
         this.period = period;
         last = repetitionCount;
@@ -39,11 +43,11 @@ public class SimpleTimeTable extends AbstractTimeTable {
         return period > 0;
     }
 
-    private SimpleTime baseTime(){
+    private AbstractTime baseTime(){
         return times.get(0);
     }
 
-    private SimpleTime lastTime(){
+    private AbstractTime lastTime(){
         if( isPeriodical() ){
             return new SimpleTime( baseTime().getTimestamp() + last*period);
         }
@@ -52,7 +56,7 @@ public class SimpleTimeTable extends AbstractTimeTable {
 
 
 
-    protected SimpleTime getNextTime( SimpleTime now){
+    protected AbstractTime getNextTime( AbstractTime now){
         if( now.compareTo( baseTime() ) > 0 ){
             if( now.compareTo( lastTime() ) <= 0 ) {
                 if (isPeriodical()) {
@@ -71,16 +75,16 @@ public class SimpleTimeTable extends AbstractTimeTable {
         else return  baseTime();
     }
 
-    protected SimpleTime getPreviousTime( SimpleTime now){
+    protected AbstractTime getPreviousTime( AbstractTime now){
         // TODO implement this
         throw new NotImplementedException();
     }
 
-    protected SimpleTime getLastTime( SimpleTime now){
+    protected AbstractTime getLastTime( AbstractTime now){
         return lastTime();
     }
 
-    protected SimpleTime getFirstTime( SimpleTime now){
+    protected AbstractTime getFirstTime( AbstractTime now){
         return baseTime();
     }
 
