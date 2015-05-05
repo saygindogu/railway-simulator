@@ -1,6 +1,8 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
 import tr.bilkent.oop.railwaysimulator.model.AbstractTimeTable;
+import tr.bilkent.oop.railwaysimulator.model.simulation.Direction;
+import tr.bilkent.oop.railwaysimulator.model.simulation.SimpleDirection;
 
 import java.io.Serializable;
 import java.util.List;
@@ -43,15 +45,15 @@ public class Train implements Serializable {
         return destination;
     }
 
-    protected int getSpeed() {
+    public int getSpeed() {
         return speed;
     }
 
-    protected List<Waggon> getWaggons() {
+    public List<Waggon> getWaggons() {
         return waggons;
     }
 
-    protected Direction getInitialDirection() {
+    public Direction getInitialDirection() {
         return initialDirection;
     }
 
@@ -74,4 +76,6 @@ public class Train implements Serializable {
     protected void setWaggons(List<Waggon> waggons) {
         this.waggons = waggons;
     }
+
+
 }

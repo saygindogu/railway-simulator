@@ -10,7 +10,6 @@ import java.io.Serializable;
  */
 public abstract class AbstractTime implements Comparable<AbstractTime>, Serializable{
 
-    public abstract AbstractTime getBirthOfCronus(); /* Funny way to get the beggining of time. */
     public abstract long getTimestamp();
 
     public long getIntervalBetween( AbstractTime t1, AbstractTime t2){
@@ -20,4 +19,6 @@ public abstract class AbstractTime implements Comparable<AbstractTime>, Serializ
     public int compareTo(AbstractTime o) {
         return (int) ((this.getTimestamp() - o.getTimestamp()) % Integer.MAX_VALUE);
     }
+
+    public abstract long getTimeDistanceFrom(AbstractTime otherTime);
 }

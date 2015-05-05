@@ -1,7 +1,12 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
+import tr.bilkent.oop.railwaysimulator.model.simulation.DefaultTrainDispacher;
+import tr.bilkent.oop.railwaysimulator.model.simulation.TrainDispacher;
 import tr.bilkent.oop.railwaysimulator.model.user.User;
 import tr.bilkent.oop.railwaysimulator.model.user.UserGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by saygin on 5/1/2015.
@@ -111,7 +116,7 @@ public class RailwaySystemFacade {
     }
 
     public boolean isOnCurrentSystem( Track track){
-        return currentSystem.getTracks().contains( track);
+        return currentSystem.getTracks().contains(track);
     }
 
     public boolean isOnCurrentSystem( Station station){
@@ -119,36 +124,49 @@ public class RailwaySystemFacade {
     }
 
 
-    public void addNewTrainTo( Station station){
+    public void addNewTrainTo( Track track, Station station){
         //TODO check modify rights
         if( isOnCurrentSystem( station) ){
             Train train;
             TrainBuilder builder = new TrainBuilder();
             train = builder.build();
-            station.addTrain( train );
+            station.addTrainOn( track, train );
         }
         else throw new NotOnCurrentSystemException();
     }
 
-    public void addTrainTo( Station station, Train train){
+    public void addTrainTo( Track track, Station station, Train train){
         //TODO check modify rights
         if( isOnCurrentSystem( station) ){
-            station.addTrain( train );
+            station.addTrainOn( track, train);
         }
         else throw new NotOnCurrentSystemException();
     }
 
 
-     /*
-        //TODO Dispacher interface
-     */
-     public void addNewDispacherTo( Station station){
-         //TODO check modify rights
-         if( isOnCurrentSystem( station) ){
-             station.setTrainDispacher( new DefaultTrainDispacher() );
-         }
-         else throw new NotOnCurrentSystemException();
-     }
+    public Position getFirstStationPositionsBetween( Track track, Position currentPosition, Position newPosition) {
+        //TODO read right check
+        if( isOnCurrentSystem( track)){
+            return track.getFirstStationPositionsBetween( currentPosition, newPosition );
+        }
+        else throw new NotOnCurrentSystemException();
+    }
 
+    public List<TrainDispacher> getDispachersOfTheSystem(){
+        //TODO check simulate permissions
+        ArrayList<TrainDispacher> list = new ArrayList<TrainDispacher>();
+        for (Track track : currentSystem.getTracks()) {
+            for (Station station : track.getStations()) {
+                if( !station.getTrainQueueOn( track).isEmpty()){
+                    list.add( new DefaultTrainDispacher( track, station.getTrainQueueOn( track), station.getTimeTableOn(track) ) );
+                }
+            }
+        }
+        return list;
 
+    }
+
+    public RailwaySystem getCurrentSystem() {
+        return currentSystem;
+    }
 }

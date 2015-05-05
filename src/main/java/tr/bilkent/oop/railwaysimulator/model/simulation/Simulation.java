@@ -8,10 +8,11 @@ import tr.bilkent.oop.railwaysimulator.model.SimpleTime;
  *
  * Dynamic RailwaySystem object..
  */
-public interface Simulation extends DynamicObject {
-    public static AbstractTime DEFAULT_TIME_SIMULATION = SimpleTime.OneDay;
+public interface Simulation {
+    public AbstractTime DEFAULT_TIME_SIMULATION = SimpleTime.ONE_DAY;
     void simulate();
     void simulateUntil( AbstractTime time);
-    void setDefaultTimeInterval( AbstractTime interval );
-    void setDefaultTimeIntervalInMiliseconds( long interval );
+    void setTimeInterval(AbstractTime interval);
+    void setTimeIntervalInMiliseconds( long interval );
+    void tick();
 }

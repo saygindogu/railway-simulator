@@ -6,25 +6,26 @@ package tr.bilkent.oop.railwaysimulator.model;
  * TODO change access..
  */
 public class SimpleTime extends AbstractTime {
-    public static AbstractTime OneDay = new SimpleTime( 86400000);
-    public static AbstractTime OneHour = new SimpleTime( 360000);
-    public static AbstractTime OneMinute = new SimpleTime( 60000);
-    public static AbstractTime OneSecond = new SimpleTime( 1000);
+    public static final AbstractTime ONE_DAY = new SimpleTime( 86400000);
+    public static final AbstractTime ONE_HOUR = new SimpleTime( 360000);
+    public static final AbstractTime ONE_MINUTE = new SimpleTime( 60000);
+    public static final AbstractTime ONE_SECOND = new SimpleTime( 1000);
+    public static final AbstractTime BIRTH_OF_CRONUS = new SimpleTime( 0);
 
     private long timestamp;
 
-    protected SimpleTime( long timestamp){
+    public SimpleTime( long timestamp){
         this.timestamp = timestamp;
     }
 
+
     @Override
-    public AbstractTime getBirthOfCronus() {
-        //TODO implement
-        return null;
+    public long getTimestamp() {
+        return timestamp;
     }
 
     @Override
-    protected long getTimestamp() {
-        return timestamp;
+    public long getTimeDistanceFrom(AbstractTime otherTime) {
+        return timestamp - otherTime.getTimestamp();
     }
 }

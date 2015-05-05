@@ -1,39 +1,52 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
+import tr.bilkent.oop.railwaysimulator.model.AbstractTimeTable;
 import tr.bilkent.oop.railwaysimulator.model.identity.Identity;
 import tr.bilkent.oop.railwaysimulator.model.identity.IdentityFactory;
 import tr.bilkent.oop.railwaysimulator.model.identity.StationIdentityFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by saygin on 4/19/2015.
  *
- * TODO big job:  use a list of dispacher impl ( one for each track. )Take trains to the stations.
+ * TODO big job:  use a list of dispacher impl ( one for each track. )Take trainQueues to the stations.
  */
 public class Station implements Serializable {
     public static final int DEFAULT_MAX_NUM_WAGGONS = 20;
     private Identity identity;
     private String name;
-    private transient List<Track> tracks;
-    private List<Position> positions; // positions on tracks
-    private List<Integer> maxNumberOfWaggonsAtPerons;
-    private TrainDispacherImpl trainDispacher;
+
+    private List<Track> tracks;
+    private List<Position> positions; /**Parallel array with tracks */
+    private List<Integer> maxNumberOfWaggonsAtPerons; /**Parallel array with tracks */
+    private List< Queue<Train> > trainQueues; /**Parallel array with tracks */
+    private List< AbstractTimeTable > departureTimeTables; /**Parallel array with tracks */
 
     public Station( String name, Track track, Position position){
         IdentityFactory factory = StationIdentityFactory.getInstance();
         identity = factory.newIdentity();
 
         this.name = name;
+
         tracks = new ArrayList<Track>(1);
-        positions = new ArrayList<Position>(1);
-        maxNumberOfWaggonsAtPerons = new ArrayList<Integer>(1);
         tracks.add(track);
+
+        positions = new ArrayList<Position>(1);
         positions.add(position);
-        maxNumberOfWaggonsAtPerons.add( DEFAULT_MAX_NUM_WAGGONS);
-        trainDispacher = null;
+
+        maxNumberOfWaggonsAtPerons = new ArrayList<Integer>(1);
+        maxNumberOfWaggonsAtPerons.add(DEFAULT_MAX_NUM_WAGGONS);
+
+        trainQueues = new ArrayList<Queue<Train>>(1);
+        trainQueues.add( new LinkedList<Train>());
+
+        departureTimeTables = new ArrayList<AbstractTimeTable>(1);
+        departureTimeTables.add( null);
     }
 
     public Station( String name, Track track, Position position, int maxNumberOfWaggons){
@@ -41,13 +54,21 @@ public class Station implements Serializable {
         identity = factory.newIdentity();
 
         this.name = name;
+
         tracks = new ArrayList<Track>(1);
-        positions = new ArrayList<Position>(1);
-        maxNumberOfWaggonsAtPerons = new ArrayList<Integer>(1);
         tracks.add(track);
+
+        positions = new ArrayList<Position>(1);
         positions.add(position);
 
-        trainDispacher = null;
+        maxNumberOfWaggonsAtPerons = new ArrayList<Integer>(1);
+        maxNumberOfWaggonsAtPerons.add(maxNumberOfWaggons);
+
+        trainQueues = new ArrayList<Queue<Train>>(1);
+        trainQueues.add( new LinkedList<Train>());
+
+        departureTimeTables = new ArrayList<AbstractTimeTable>(1);
+        departureTimeTables.add( null);
     }
 
     protected void addThisTo( Track track, Position position){
@@ -57,6 +78,9 @@ public class Station implements Serializable {
         else{
             tracks.add( track);
             positions.add( position);
+            maxNumberOfWaggonsAtPerons.add( maxNumberOfWaggonsAtPerons.get( 0));
+            trainQueues.add( new LinkedList<Train>());
+            departureTimeTables.add( null);
         }
     }
 
@@ -80,22 +104,43 @@ public class Station implements Serializable {
     protected int getMaxNumWaggonsOn( Track track){
         if( tracks.contains( track) ){
             int index = tracks.indexOf( track);
-            return maxNumberOfWaggonsAtPerons.get( index);
+            return maxNumberOfWaggonsAtPerons.get(index);
         }
         else throw new StationNotInTrackException();
     }
 
-    protected void setTrainDispacher( TrainDispacherImpl dispacher){
-        this.trainDispacher = dispacher;
+    protected void addTimeTableOn( Track track, AbstractTimeTable timetable){
+        if( tracks.contains( track) ){
+            int index = tracks.indexOf( track);
+            departureTimeTables.set(index, timetable);
+        }
+        else throw new StationNotInTrackException();
     }
 
-    protected void addTrain( Train train){
-        if( trainDispacher == null ){
-            throw new NoTrainDispacherException();
+    protected void addTrainOn( Track track, Train train){
+        if( tracks.contains( track) ){
+            int index = tracks.indexOf( track);
+            if( departureTimeTables.get( index) == null)
+                throw new NoTimeTableException();
+            trainQueues.get(index).add(train);
         }
-        else{
-            trainDispacher.addTrain( train);
+        else throw new StationNotInTrackException();
+    }
+
+    protected Queue<Train> getTrainQueueOn( Track track) {
+        if( tracks.contains( track) ){
+            int index = tracks.indexOf( track);
+            return trainQueues.get(index);
         }
+        else throw new StationNotInTrackException();
+    }
+
+    protected AbstractTimeTable getTimeTableOn( Track track) {
+        if( tracks.contains( track) ){
+            int index = tracks.indexOf( track);
+            return departureTimeTables.get(index);
+        }
+        else throw new StationNotInTrackException();
     }
 
     public Identity getIdentity() {

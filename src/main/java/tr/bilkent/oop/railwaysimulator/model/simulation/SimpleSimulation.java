@@ -2,9 +2,12 @@ package tr.bilkent.oop.railwaysimulator.model.simulation;
 
 import javafx.util.Pair;
 import tr.bilkent.oop.railwaysimulator.model.AbstractTime;
+import tr.bilkent.oop.railwaysimulator.model.SimpleTime;
+import tr.bilkent.oop.railwaysimulator.model.TimeInterval;
 import tr.bilkent.oop.railwaysimulator.model.railwaysystem.*;
 
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by saygin on 4/19/2015.
@@ -16,16 +19,20 @@ import java.util.List;
  */
 public class SimpleSimulation implements Simulation {
 
-    private static SimpleSimulation instance;
-    private AbstractTime currentTime;
-    private RailwaySystem system;
-    private List< Pair<Train,Position> > trainPositions;
+    private transient static SimpleSimulation instance;
+    private transient long timeInterval;
+    private transient AbstractTime currentTime;
+    private transient RailwaySystem system;
+    private transient List< DynamicTrain > dynamicTrains;
+    private transient List< TrainDispacher > dispachers;
+    private Queue<SimulationState> stateQueue;
 
 
     /*Singleton Pattern*/
     private SimpleSimulation(){
-        // TODO constructor
-        Train train = new TrainBuilder().build();
+        timeInterval = DEFAULT_TIME_SIMULATION.getTimestamp();
+        currentTime = SimpleTime.BIRTH_OF_CRONUS;
+        system = RailwaySystemFacade.getInstance().getCurrentSystem();
     }
 
     public static SimpleSimulation getInstance(){
@@ -35,31 +42,45 @@ public class SimpleSimulation implements Simulation {
         return instance;
     }
 
-    public void simulate( RailwaySystem system, AbstractTime untilThisTime){
-        //TODO
-    }
-
-    public void passTime( RailwaySystem system, AbstractTime timeToPass ){
-        //TODO
-    }
-
     public void simulate() {
-        //TODO
+        simulateUntil( DEFAULT_TIME_SIMULATION);
     }
 
     public void simulateUntil(AbstractTime time) {
-        //TODO
+        while( time.compareTo( currentTime) < 0 ){
+            tick();
+        }
     }
 
-    public void setDefaultTimeInterval(AbstractTime interval) {
-        //TODO
+    public Queue<SimulationState> getStateQueue() {
+        return stateQueue;
     }
 
-    public void setDefaultTimeIntervalInMiliseconds(long interval) {
-        //TODO
+    public void setTimeInterval(AbstractTime interval) {
+        timeInterval = interval.getTimestamp();
+    }
+
+    public void setTimeIntervalInMiliseconds(long interval) {
+        timeInterval = interval;
     }
 
     public void tick() {
-        //TODO
+        SimpleTime now = (SimpleTime) currentTime;
+        SimpleTime future = new SimpleTime(  now.getTimestamp() + timeInterval );
+        TimeInterval interval = new TimeInterval( now, future);
+        for (DynamicTrain dynamicTrain : dynamicTrains) {
+            dynamicTrain.tick( interval);
+        }
+        for (TrainDispacher dispacher : dispachers) {
+            dispacher.tick( interval);
+        }
+        now = future;
+        stateQueue.add( getStateSnapShot() );
     }
+
+    private SimulationState getStateSnapShot() {
+        //TODO ...
+        return null;
+    }
+
 }

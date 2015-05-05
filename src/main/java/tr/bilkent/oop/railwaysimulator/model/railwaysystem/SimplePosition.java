@@ -9,8 +9,12 @@ import tr.bilkent.oop.railwaysimulator.model.UnknownComparisonException;
 public class SimplePosition extends Position {
     protected int distance;
 
+    public SimplePosition( int distance){
+        this.distance = distance;
+    }
+
     @Override
-    protected int getDistanceFrom(Position other) {
+    public int getDistanceFrom(Position other) {
         if( other instanceof SimplePosition){
             return getDistanceFrom( other);
         }
@@ -19,5 +23,14 @@ public class SimplePosition extends Position {
 
     protected int getDistanceFrom( SimplePosition other){
         return Math.abs( other.distance - distance);
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public int compareTo(Position p) {
+        //TODO casting check
+        return distance - ((SimplePosition)p).getDistance();
     }
 }

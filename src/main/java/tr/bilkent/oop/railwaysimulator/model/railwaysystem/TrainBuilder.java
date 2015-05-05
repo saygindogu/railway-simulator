@@ -4,6 +4,8 @@ package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 import tr.bilkent.oop.railwaysimulator.model.AbstractTimeTable;
 import tr.bilkent.oop.railwaysimulator.model.SimpleTime;
 import tr.bilkent.oop.railwaysimulator.model.SimpleTimeTable;
+import tr.bilkent.oop.railwaysimulator.model.simulation.Direction;
+import tr.bilkent.oop.railwaysimulator.model.simulation.SimpleDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class TrainBuilder {
         speed = Train.DEFAULT_SPEED;
         prototype = null;
         initialDirection = new SimpleDirection( true);
-        timeTable = new SimpleTimeTable( new SimpleTime(0), SimpleTime.OneHour );
+        timeTable = new SimpleTimeTable( new SimpleTime(0), SimpleTime.ONE_HOUR);
         waggonCount = Train.DEFAULT_WAGGON_COUNT;
     }
 

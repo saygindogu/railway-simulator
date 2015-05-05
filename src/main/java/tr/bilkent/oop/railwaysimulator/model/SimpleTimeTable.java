@@ -24,21 +24,28 @@ public class SimpleTimeTable extends AbstractTimeTable {
         last = times.size();
     }
 
-    protected SimpleTimeTable( AbstractTime base, AbstractTime period){
+    public SimpleTimeTable( AbstractTime base, AbstractTime period){
         times = new ArrayList<AbstractTime>(1);
         times.add(base);
         this.period = period.getTimestamp();
         last = DEFAULT_REPETITION;
     }
 
-    protected SimpleTimeTable( AbstractTime base, long period, int repetitionCount){
+    public SimpleTimeTable( AbstractTime base, long period, int repetitionCount){
         times = new ArrayList<AbstractTime>(1);
         times.add(base);
         this.period = period;
         last = repetitionCount;
     }
 
-    protected boolean isPeriodical(){
+    public SimpleTimeTable() {
+        times = new ArrayList<AbstractTime>(1);
+        times.add( SimpleTime.BIRTH_OF_CRONUS );
+        this.period = SimpleTime.ONE_HOUR.getTimestamp();
+        last = DEFAULT_REPETITION;
+    }
+
+    public boolean isPeriodical(){
         return period > 0;
     }
 
@@ -55,7 +62,7 @@ public class SimpleTimeTable extends AbstractTimeTable {
 
 
 
-    protected AbstractTime getNextTime( AbstractTime now){
+    public AbstractTime getNextTime( AbstractTime now){
         if( now.compareTo( baseTime() ) > 0 ){
             if( now.compareTo( lastTime() ) <= 0 ) {
                 if (isPeriodical()) {
@@ -74,16 +81,16 @@ public class SimpleTimeTable extends AbstractTimeTable {
         else return  baseTime();
     }
 
-    protected AbstractTime getPreviousTime( AbstractTime now){
+    public AbstractTime getPreviousTime( AbstractTime now){
         // TODO implement this
         throw new NotImplementedException();
     }
 
-    protected AbstractTime getLastTime( AbstractTime now){
+    public AbstractTime getLastTime( AbstractTime now){
         return lastTime();
     }
 
-    protected AbstractTime getFirstTime( AbstractTime now){
+    public AbstractTime getFirstTime( AbstractTime now){
         return baseTime();
     }
 
