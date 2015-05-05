@@ -1,10 +1,8 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
-import javafx.util.Pair;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import tr.bilkent.oop.railwaysimulator.model.AbstractTimeTable;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -1,5 +1,8 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
+import tr.bilkent.oop.railwaysimulator.model.AbstractTime;
+import tr.bilkent.oop.railwaysimulator.model.SimpleTime;
+
 import java.io.Serializable;
 import java.util.List;
 

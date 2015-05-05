@@ -1,6 +1,9 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
+import javafx.util.Pair;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by saygin on 4/19/2015.
@@ -33,4 +36,5 @@ public class Waggon implements Serializable {
     protected int getCapacity() {
         return capacity;
     }
+
 }

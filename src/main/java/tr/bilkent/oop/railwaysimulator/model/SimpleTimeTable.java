@@ -1,9 +1,8 @@
-package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
+package tr.bilkent.oop.railwaysimulator.model;
 
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

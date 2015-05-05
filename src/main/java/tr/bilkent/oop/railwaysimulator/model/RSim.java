@@ -13,6 +13,10 @@ import java.util.TreeSet;
 
 /**
  * Created by saygin on 4/19/2015.
+ *
+ * Program's main entity object. The universe is this object.
+ *
+ * TODO change access..
  */
 public class RSim implements Serializable {
     private static transient RSim instance;

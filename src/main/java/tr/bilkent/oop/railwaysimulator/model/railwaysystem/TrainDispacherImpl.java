@@ -5,6 +5,8 @@ package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
  */
 public interface TrainDispacherImpl {
 
+    //TODO add a dispach queue somewhere...
+    // TODO move time table here... ( from trains)
     void dispach();
     void addTrain( Train train);
 }

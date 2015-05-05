@@ -1,15 +1,19 @@
-package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
+package tr.bilkent.oop.railwaysimulator.model;
 
 
 import java.io.Serializable;
 
 /**
  * Created by saygin on 5/3/2015.
+ *
+ * TODO change access..
  */
 public abstract class AbstractTime implements Comparable<AbstractTime>, Serializable{
 
-    protected abstract long getTimestamp();
-    protected long getIntervalBetween( AbstractTime t1, AbstractTime t2){
+    public abstract AbstractTime getBirthOfCronus(); /* Funny way to get the beggining of time. */
+    public abstract long getTimestamp();
+
+    public long getIntervalBetween( AbstractTime t1, AbstractTime t2){
         return t2.getTimestamp() - t1.getTimestamp();
     }
 

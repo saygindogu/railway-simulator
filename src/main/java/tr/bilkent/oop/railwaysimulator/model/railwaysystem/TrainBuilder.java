@@ -1,6 +1,10 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
 
+import tr.bilkent.oop.railwaysimulator.model.AbstractTimeTable;
+import tr.bilkent.oop.railwaysimulator.model.SimpleTime;
+import tr.bilkent.oop.railwaysimulator.model.SimpleTimeTable;
+
 import java.util.ArrayList;
 import java.util.List;
 
