@@ -14,7 +14,6 @@ public class UserIdentityFactory implements IdentityFactory{
 
     public UserIdentityFactory(){}
 
-    @Override
     public Identity newIdentity() {
         RSim rsim = RSim.getInstance();
 

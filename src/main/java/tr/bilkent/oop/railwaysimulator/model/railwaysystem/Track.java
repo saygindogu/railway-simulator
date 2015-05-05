@@ -1,11 +1,13 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
-import javafx.geometry.Pos;
-import tr.bilkent.oop.railwaysimulator.model.AbstractTime;
-import tr.bilkent.oop.railwaysimulator.model.SimpleTime;
+import tr.bilkent.oop.railwaysimulator.model.simulation.AbstractTime;
+import tr.bilkent.oop.railwaysimulator.model.simulation.SimpleTime;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.SimplePosition;
 import tr.bilkent.oop.railwaysimulator.model.simulation.SimpleDirection;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,8 +16,8 @@ import java.util.List;
 public class Track implements Serializable {
     public static final AbstractTime DEFAULT_WAITING_TIME = SimpleTime.ONE_MINUTE;
     public static final int DEFAULT_DISTANCE_BETWEEN_STATIONS = 0;
+
     private List<Station> stationList;
-    private Station firstStation;
     private AbstractTime waitingTime;
     private int maxNumverOfStations;
     private int ministanceBetweenStations;
@@ -24,24 +26,44 @@ public class Track implements Serializable {
         this.maxNumverOfStations = maxNumverOfStations;
         this.ministanceBetweenStations = ministanceBetweenStations;
         waitingTime = DEFAULT_WAITING_TIME;
+
+        stationList = new ArrayList<Station>();
     }
 
     public Track(int maxNumverOfStations, int ministanceBetweenStations, Station firstStation) {
         this.maxNumverOfStations = maxNumverOfStations;
         this.ministanceBetweenStations = ministanceBetweenStations;
-        this.firstStation = firstStation;
+        waitingTime = DEFAULT_WAITING_TIME;
+
+        stationList = new ArrayList<Station>();
     }
 
-    public void addStation( Station s){
-        s.addThisTo( this, new SimplePosition(((SimplePosition) stationList.get(stationList.size() - 1).getPositionOn(this)).getDistance() + DEFAULT_DISTANCE_BETWEEN_STATIONS ));
+    protected boolean addStation( Station s){
+        if( stationList.size() >= maxNumverOfStations ){
+            return false;
+        }
+        s.addThisTo(this, new SimplePosition(((SimplePosition) stationList.get(stationList.size() - 1).getPositionOn(this)).getDistance() + DEFAULT_DISTANCE_BETWEEN_STATIONS));
         stationList.add( s);
+        return true;
     }
 
-    public List<Station> getStations() {
+    protected boolean addStation( Station s, Position position){
+        if( stationList.size() >= maxNumverOfStations ){
+            return false;
+        }
+        else if( position.getDistanceFrom( stationList.get(stationList.size()-1).getPositionOn(this)) > ministanceBetweenStations ){
+            return false;
+        }
+        s.addThisTo(this, new SimplePosition(((SimplePosition) stationList.get(stationList.size() - 1).getPositionOn(this)).getDistance() + DEFAULT_DISTANCE_BETWEEN_STATIONS));
+        stationList.add( s);
+        return true;
+    }
+
+    protected List<Station> getStations() {
         return stationList;
     }
 
-    public AbstractTime getWaitingTime() {
+    protected AbstractTime getWaitingTime() {
         return waitingTime;
     }
 

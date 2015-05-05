@@ -1,8 +1,6 @@
-package tr.bilkent.oop.railwaysimulator.model;
+package tr.bilkent.oop.railwaysimulator.model.simulation;
 
 import javafx.util.Pair;
-
-import java.sql.Time;
 
 /**
  * Created by saygin on 5/5/2015.

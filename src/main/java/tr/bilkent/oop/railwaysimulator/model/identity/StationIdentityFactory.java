@@ -13,7 +13,6 @@ public class StationIdentityFactory implements IdentityFactory {
 
     public StationIdentityFactory(){}
 
-    @Override
     public Identity newIdentity() {
         RSim rsim = RSim.getInstance();
 

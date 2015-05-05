@@ -1,14 +1,11 @@
 package tr.bilkent.oop.railwaysimulator.model.simulation;
 
 
-import tr.bilkent.oop.railwaysimulator.model.AbstractTimeTable;
-import tr.bilkent.oop.railwaysimulator.model.SimpleTime;
-import tr.bilkent.oop.railwaysimulator.model.SimpleTimeTable;
-import tr.bilkent.oop.railwaysimulator.model.TimeInterval;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Train;
 import tr.bilkent.oop.railwaysimulator.model.railwaysystem.*;
 
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by saygin on 5/1/2015.

@@ -1,5 +1,9 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
+import tr.bilkent.oop.railwaysimulator.model.exception.NotOnCurrentSystemException;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Train;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.TrainBuilder;
 import tr.bilkent.oop.railwaysimulator.model.simulation.DefaultTrainDispacher;
 import tr.bilkent.oop.railwaysimulator.model.simulation.TrainDispacher;
 import tr.bilkent.oop.railwaysimulator.model.user.User;
@@ -178,6 +182,13 @@ public class RailwaySystemFacade {
                 }
             }
             return null;
+        }
+        throw new NotOnCurrentSystemException();
+    }
+
+    public long getWaitingTimeOf(Track track) {
+        if( isOnCurrentSystem( track) ){
+            return track.getWaitingTime().getTimestamp();
         }
         throw new NotOnCurrentSystemException();
     }

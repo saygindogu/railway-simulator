@@ -1,11 +1,10 @@
 package tr.bilkent.oop.railwaysimulator.model.simulation;
 
-import javafx.util.Pair;
-import tr.bilkent.oop.railwaysimulator.model.AbstractTime;
-import tr.bilkent.oop.railwaysimulator.model.SimpleTime;
-import tr.bilkent.oop.railwaysimulator.model.TimeInterval;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
 import tr.bilkent.oop.railwaysimulator.model.railwaysystem.*;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -22,7 +21,6 @@ public class SimpleSimulation implements Simulation {
     private transient static SimpleSimulation instance;
     private transient long timeInterval;
     private transient AbstractTime currentTime;
-    private transient RailwaySystem system;
     private transient List< DynamicTrain > dynamicTrains;
     private transient List< TrainDispacher > dispachers;
     private Queue<SimulationState> stateQueue;
@@ -32,7 +30,10 @@ public class SimpleSimulation implements Simulation {
     private SimpleSimulation(){
         timeInterval = DEFAULT_TIME_SIMULATION.getTimestamp();
         currentTime = SimpleTime.BIRTH_OF_CRONUS;
-        system = RailwaySystemFacade.getInstance().getCurrentSystem();
+        stateQueue = new LinkedList<SimulationState>();
+        dynamicTrains = new ArrayList<DynamicTrain>();
+
+        dispachers = RailwaySystemFacade.getInstance().getDispachersOfTheSystem();
     }
 
     public static SimpleSimulation getInstance(){
@@ -74,7 +75,7 @@ public class SimpleSimulation implements Simulation {
         for (TrainDispacher dispacher : dispachers) {
             dispacher.tick( interval);
         }
-        now = future;
+        currentTime = future;
         stateQueue.add( getStateSnapShot() );
     }
 

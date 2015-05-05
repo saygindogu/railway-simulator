@@ -1,4 +1,4 @@
-package tr.bilkent.oop.railwaysimulator.model;
+package tr.bilkent.oop.railwaysimulator.model.simulation;
 
 /**
  * Created by saygin on 4/19/2015.

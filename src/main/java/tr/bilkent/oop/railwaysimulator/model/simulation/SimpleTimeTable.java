@@ -1,4 +1,4 @@
-package tr.bilkent.oop.railwaysimulator.model;
+package tr.bilkent.oop.railwaysimulator.model.simulation;
 
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -12,7 +12,7 @@ import java.util.List;
  * This class is highly coupled with SimpleTime, all AbstractTime objects should be of type SimpleTime.
  * It might not be safe to use other instances of AbstractTime.
  */
-public class SimpleTimeTable extends AbstractTimeTable {
+public class SimpleTimeTable implements AbstractTimeTable {
     public static final int DEFAULT_REPETITION = 1000;
     private List<AbstractTime> times;
     private long period;

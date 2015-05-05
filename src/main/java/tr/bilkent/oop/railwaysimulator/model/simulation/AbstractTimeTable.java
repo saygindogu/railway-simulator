@@ -1,4 +1,4 @@
-package tr.bilkent.oop.railwaysimulator.model;
+package tr.bilkent.oop.railwaysimulator.model.simulation;
 
 import java.io.Serializable;
 

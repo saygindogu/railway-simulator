@@ -1,7 +1,9 @@
 package tr.bilkent.oop.railwaysimulator.model.simulation;
 
-import tr.bilkent.oop.railwaysimulator.Main;
-import tr.bilkent.oop.railwaysimulator.model.TimeInterval;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.SimplePosition;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Train;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Waggon;
 import tr.bilkent.oop.railwaysimulator.model.railwaysystem.*;
 
 import java.util.ArrayList;
@@ -36,8 +38,7 @@ public class DynamicTrain implements DynamicObject {
     }
 
     public void tick(TimeInterval dt) {
-        //TODO probably this will yield 0 change in position almost always which is a HUUGE problem. Change simple position parameter to float.
-        Position newPosition = new SimplePosition( ((SimplePosition) currentPosition).getDistance() + Math.round(convertToMetersPerMiliSeconds(speed) * currentDirection.getCoefficent() ));
+        Position newPosition = new SimplePosition( ((SimplePosition) currentPosition).getDistance() + convertToMetersPerMiliSeconds(speed) * currentDirection.getCoefficent() );
         Position stationPosision = RailwaySystemFacade.getInstance().getFirstStationPositionsBetween(currentTrack, currentPosition, newPosition);
         if( stationPosision == null){
             currentPosition = (SimplePosition)newPosition;
@@ -48,9 +49,10 @@ public class DynamicTrain implements DynamicObject {
                 ((DefaultTrainDispacher) SimpleSimulation.getInstance().getDispacher(currentTrack, stationPosision)).addTrain( this);
             }
             else{
-                long timePassed = getRequiredTimeToGo( stationPosision );
+                long timePassed = getRequiredTimeToGo(stationPosision);
                 currentPosition = (SimplePosition)stationPosision;
-                tick( dt.truncateFromBeggining( timePassed + currentTrack.getWaitingTime().getTimestamp() ) );
+                long waitingTime = RailwaySystemFacade.getInstance().getWaitingTimeOf( currentTrack);
+                tick( dt.truncateFromBeggining( timePassed + waitingTime ) );
             }
         }
     }
@@ -64,7 +66,7 @@ public class DynamicTrain implements DynamicObject {
 
     private float convertToMetersPerMiliSeconds( int metersPerSeconds){
         return metersPerSeconds / 1000;
-        //TODO introduce speed object because of these conversions
+        //TODO maybe introduce speed object because of these conversions
     }
 
     public Train getTrain() {

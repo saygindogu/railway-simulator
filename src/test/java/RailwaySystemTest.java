@@ -2,6 +2,7 @@ package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
 import org.junit.Assert;
 import org.junit.Test;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Waggon;
 
 /**
  * Created by saygin on 5/4/2015.

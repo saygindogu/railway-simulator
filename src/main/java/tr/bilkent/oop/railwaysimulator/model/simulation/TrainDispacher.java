@@ -1,6 +1,6 @@
 package tr.bilkent.oop.railwaysimulator.model.simulation;
 
-import tr.bilkent.oop.railwaysimulator.model.railwaysystem.Position;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
 import tr.bilkent.oop.railwaysimulator.model.railwaysystem.Track;
 
 /**
