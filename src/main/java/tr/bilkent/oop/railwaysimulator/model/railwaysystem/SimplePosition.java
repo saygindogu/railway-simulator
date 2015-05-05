@@ -33,4 +33,19 @@ public class SimplePosition extends Position {
         //TODO casting check
         return distance - ((SimplePosition)p).getDistance();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SimplePosition that = (SimplePosition) o;
+
+        return getDistance() == that.getDistance();
+    }
+
+    @Override
+    public int hashCode() {
+        return getDistance();
+    }
 }

@@ -130,7 +130,7 @@ public class RailwaySystemFacade {
             Train train;
             TrainBuilder builder = new TrainBuilder();
             train = builder.build();
-            station.addTrainOn( track, train );
+            station.addTrainOn(track, train);
         }
         else throw new NotOnCurrentSystemException();
     }
@@ -138,7 +138,7 @@ public class RailwaySystemFacade {
     public void addTrainTo( Track track, Station station, Train train){
         //TODO check modify rights
         if( isOnCurrentSystem( station) ){
-            station.addTrainOn( track, train);
+            station.addTrainOn(track, train);
         }
         else throw new NotOnCurrentSystemException();
     }
@@ -157,8 +157,8 @@ public class RailwaySystemFacade {
         ArrayList<TrainDispacher> list = new ArrayList<TrainDispacher>();
         for (Track track : currentSystem.getTracks()) {
             for (Station station : track.getStations()) {
-                if( !station.getTrainQueueOn( track).isEmpty()){
-                    list.add( new DefaultTrainDispacher( track, station.getTrainQueueOn( track), station.getTimeTableOn(track) ) );
+                if( !station.getTrainQueueOn(track).isEmpty()){
+                    list.add( new DefaultTrainDispacher( track, station.getTrainQueueOn(track), station.getTimeTableOn(track), station.getPositionOn(track) ) );
                 }
             }
         }
@@ -168,5 +168,17 @@ public class RailwaySystemFacade {
 
     public RailwaySystem getCurrentSystem() {
         return currentSystem;
+    }
+
+    public Station getStationOnPosition(Track track, Position positionOnTrack) {
+        if( isOnCurrentSystem( track) ){
+            for (Station station : track.getStations()) {
+                if( station.getPositionOn( track).equals( positionOnTrack) ){
+                    return station;
+                }
+            }
+            return null;
+        }
+        throw new NotOnCurrentSystemException();
     }
 }

@@ -16,7 +16,6 @@ import java.util.TreeSet;
  *
  * Program's main entity object. The universe is this object.
  *
- * TODO change access..
  */
 public class RSim implements Serializable {
     private static transient RSim instance;

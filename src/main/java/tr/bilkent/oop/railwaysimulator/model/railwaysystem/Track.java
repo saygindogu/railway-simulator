@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class Track implements Serializable {
     public static final AbstractTime DEFAULT_WAITING_TIME = SimpleTime.ONE_MINUTE;
+    public static final int DEFAULT_DISTANCE_BETWEEN_STATIONS = 0;
     private List<Station> stationList;
     private Station firstStation;
     private AbstractTime waitingTime;
@@ -31,9 +32,9 @@ public class Track implements Serializable {
         this.firstStation = firstStation;
     }
 
-    public boolean addStation( Station s){
-        //TODO
-        return  false;
+    public void addStation( Station s){
+        s.addThisTo( this, new SimplePosition(((SimplePosition) stationList.get(stationList.size() - 1).getPositionOn(this)).getDistance() + DEFAULT_DISTANCE_BETWEEN_STATIONS ));
+        stationList.add( s);
     }
 
     public List<Station> getStations() {

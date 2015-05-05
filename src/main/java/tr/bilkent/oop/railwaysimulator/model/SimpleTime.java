@@ -3,7 +3,6 @@ package tr.bilkent.oop.railwaysimulator.model;
 /**
  * Created by saygin on 4/19/2015.
  *
- * TODO change access..
  */
 public class SimpleTime extends AbstractTime {
     public static final AbstractTime ONE_DAY = new SimpleTime( 86400000);
@@ -21,6 +20,8 @@ public class SimpleTime extends AbstractTime {
 
     @Override
     public long getTimestamp() {
+        if( timestamp < 0)
+            return Integer.MAX_VALUE; //infinite time
         return timestamp;
     }
 

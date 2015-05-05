@@ -18,9 +18,11 @@ public class DynamicTrain implements DynamicObject {
     private SimpleDirection currentDirection;
     private int speed;
     private Track currentTrack;
+    private Station targetStation;
 
 
-    public DynamicTrain( Train train, Position currentPosition, Direction currentDirection){
+    public DynamicTrain( Track track, Train train, Position currentPosition, Direction currentDirection, Station targetStation){
+        this.currentTrack = track;
         this.train = train;
         waggons = new ArrayList<DynamicWaggon>();
         for (Waggon waggon : train.getWaggons()) {
@@ -28,20 +30,28 @@ public class DynamicTrain implements DynamicObject {
         }
         this.currentDirection = (SimpleDirection)currentDirection;
         this.currentPosition = (SimplePosition)currentPosition;
+        this.targetStation = targetStation;
 
+        this.speed = train.getSpeed();
     }
 
     public void tick(TimeInterval dt) {
         //TODO probably this will yield 0 change in position almost always which is a HUUGE problem. Change simple position parameter to float.
         Position newPosition = new SimplePosition( ((SimplePosition) currentPosition).getDistance() + Math.round(convertToMetersPerMiliSeconds(speed) * currentDirection.getCoefficent() ));
-        Position stationPosision = RailwaySystemFacade.getInstance().getFirstStationPositionsBetween( currentTrack, currentPosition, newPosition );
+        Position stationPosision = RailwaySystemFacade.getInstance().getFirstStationPositionsBetween(currentTrack, currentPosition, newPosition);
         if( stationPosision == null){
             currentPosition = (SimplePosition)newPosition;
         }
         else{
-            long timePassed = getRequiredTimeToGo( stationPosision );
-            currentPosition = (SimplePosition)stationPosision;
-            tick( dt.truncateFromBeggining( timePassed + currentTrack.getWaitingTime().getTimestamp() ) );
+            Station station = RailwaySystemFacade.getInstance().getStationOnPosition( currentTrack, stationPosision );
+            if( station.equals( targetStation ) ){
+                ((DefaultTrainDispacher) SimpleSimulation.getInstance().getDispacher(currentTrack, stationPosision)).addTrain( this);
+            }
+            else{
+                long timePassed = getRequiredTimeToGo( stationPosision );
+                currentPosition = (SimplePosition)stationPosision;
+                tick( dt.truncateFromBeggining( timePassed + currentTrack.getWaitingTime().getTimestamp() ) );
+            }
         }
     }
 

@@ -14,7 +14,7 @@ import java.util.List;
  * Created by saygin on 5/4/2015.
  *
  * Builder Class for Train Complex object.
- * //TODO check completeness..
+ * //
  */
 public class TrainBuilder {
     private Station destination;

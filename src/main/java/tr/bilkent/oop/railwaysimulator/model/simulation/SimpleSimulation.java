@@ -83,4 +83,12 @@ public class SimpleSimulation implements Simulation {
         return null;
     }
 
+    public TrainDispacher getDispacher(Track track, Position position) {
+        for (TrainDispacher trainDispacher : dispachers) {
+            if( trainDispacher.getTrack().equals(track) && trainDispacher.getPosition().equals( position) )
+                return trainDispacher;
+        }
+        return null;
+
+    }
 }

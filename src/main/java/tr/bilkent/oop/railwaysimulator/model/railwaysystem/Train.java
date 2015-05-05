@@ -14,7 +14,7 @@ import java.util.List;
  * RailwaySystem during simulation time.
  *
  * Destination: The planned destination for the train.
- * If the destination is null, it is set to origin on the simulation time  //TODO do this spesification during implementation of simulation
+ * If the destination is null, it is set to origin on the simulation time
  * and the train goes to the initial direction and returns after the last station at the line and stops at the origin.
  *
  */
@@ -41,7 +41,7 @@ public class Train implements Serializable {
         timeTable = null;
     }
 
-    protected Station getDestination() {
+    public Station getDestination() {
         return destination;
     }
 

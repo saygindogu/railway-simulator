@@ -19,4 +19,12 @@ public class TimeInterval {
         }
         else return new TimeInterval( interval.getValue(), interval.getValue() );
     }
+
+    public AbstractTime begin() {
+        return interval.getKey();
+    }
+
+    public AbstractTime end(){
+        return interval.getValue();
+    }
 }
