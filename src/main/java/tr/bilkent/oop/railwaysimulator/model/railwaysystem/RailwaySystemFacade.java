@@ -5,11 +5,14 @@ import tr.bilkent.oop.railwaysimulator.model.exception.SessionAlreadyStartedExce
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Train;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.TrainBuilder;
+import tr.bilkent.oop.railwaysimulator.model.simulation.AbstractTimeTable;
 import tr.bilkent.oop.railwaysimulator.model.simulation.DefaultTrainDispacher;
+import tr.bilkent.oop.railwaysimulator.model.simulation.SimpleTimeTable;
 import tr.bilkent.oop.railwaysimulator.model.simulation.TrainDispacher;
 import tr.bilkent.oop.railwaysimulator.model.user.User;
 import tr.bilkent.oop.railwaysimulator.model.user.UserGroup;
 
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,13 +115,15 @@ public class RailwaySystemFacade {
 
     public Track addNewTrackToCurrentSystem(){
         Track track = new Track( 50, 10); //TODO make these magic numbers constant so we can understand what the hell do those mean.
-        currentSystem.getTracks().add( track);
+        currentSystem
+                .getTracks()
+                .add(track);
         return track;
     }
 
     public void addNewTrackToCurrentSystem( Station station){
         Track track = new Track( 50, 10, station);
-        currentSystem.getTracks().add( track);
+        currentSystem.getTracks().add(track);
     }
 
     public boolean isOnCurrentSystem( Track track){
@@ -132,12 +137,21 @@ public class RailwaySystemFacade {
 
     public void addNewTrainTo( Track track, Station station){
         //TODO check modify rights
-        //TODO th?s must be spes?f?c to the trac
         if( isOnCurrentSystem( station) ){
             Train train;
             TrainBuilder builder = new TrainBuilder();
             train = builder.build();
             station.addTrainOn(track, train);
+        }
+        else throw new NotOnCurrentSystemException();
+    }
+
+    public void addNewTimeTableTo(Track track, Station station) {
+        //TODO check modify rights
+        if( isOnCurrentSystem( station) ){
+            AbstractTimeTable timeTable;
+            timeTable = SimpleTimeTable.DEFAULT;
+            station.addTimeTableOn( track, timeTable);
         }
         else throw new NotOnCurrentSystemException();
     }
@@ -196,12 +210,6 @@ public class RailwaySystemFacade {
         throw new NotOnCurrentSystemException();
     }
 
-    public void setUser(User user) {
-        if( currentUser != null)
-            throw new SessionAlreadyStartedException();
-        this.currentUser = user;
-    }
-
     public void logout(){
         currentUser = null;
     }
@@ -213,4 +221,14 @@ public class RailwaySystemFacade {
     public List<Track> getTracksOnSystem() {
         return currentSystem.getTracks();
     }
+
+    public Station getFirstStationOn(Track track) {
+        return track.getFirstStation();
+    }
+
+    public Station getLastStationOn(Track track) {
+        return track.getLastStation();
+    }
+
+
 }

@@ -8,6 +8,7 @@ import tr.bilkent.oop.railwaysimulator.model.exception.UnknownComparisonExceptio
  */
 public class SimplePosition implements Position {
     public static final float EPSILON = 0.0001f;
+    public static final Position ZERO = new SimplePosition(0.0f);
 
     protected float distance;
 

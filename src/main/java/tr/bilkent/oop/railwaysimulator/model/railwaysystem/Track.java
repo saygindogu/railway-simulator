@@ -1,5 +1,6 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
+import tr.bilkent.oop.railwaysimulator.model.exception.FIRST_STATION_POSITON_EXCEPTION;
 import tr.bilkent.oop.railwaysimulator.model.simulation.AbstractTime;
 import tr.bilkent.oop.railwaysimulator.model.simulation.SimpleTime;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
@@ -39,15 +40,37 @@ public class Track implements Serializable {
     }
 
     protected boolean addStation( Station s){
+        if( s == null){
+            System.out.println( "hoy hoy null");
+            return false;
+        }
         if( stationList.size() >= maxNumverOfStations ){
             return false;
         }
-        s.addThisTo(this, new SimplePosition(((SimplePosition) stationList.get(stationList.size() - 1).getPositionOn(this)).getDistance() + DEFAULT_DISTANCE_BETWEEN_STATIONS));
+        if( !s.getTracks().contains( this ) )
+        {
+            if( s.getPositionOn(this) == null ){
+                if( stationList.size() == 0){
+                    s.addThisTo(this, SimplePosition.ZERO );
+                }
+                else{
+                    s.addThisTo(this, new SimplePosition(((SimplePosition) stationList.get(stationList.size() - 1).getPositionOn(this)).getDistance() + DEFAULT_DISTANCE_BETWEEN_STATIONS));
+                }
+            }
+            else if( stationList.size() == 0 && !s.getPositionOn( this).equals( SimplePosition.ZERO ) ){
+                throw new FIRST_STATION_POSITON_EXCEPTION();
+            }
+        }
         stationList.add( s);
         return true;
     }
 
     protected boolean addStation( Station s, Position position){
+        if( s == null){
+            System.out.println( "hoy hoy null");
+            return false;
+        }
+
         if( stationList.size() >= maxNumverOfStations ){
             return false;
         }
@@ -89,11 +112,11 @@ public class Track implements Serializable {
         }
     }
 
-    private Station getLastStation() {
+    protected Station getLastStation() {
         return stationList.get( stationList.size() - 1 );
     }
 
-    private Station getFirstStation() {
+    protected Station getFirstStation() {
         return stationList.get( 0 );
     }
 }

@@ -32,13 +32,22 @@ public class Station implements Serializable {
     private List< AbstractTimeTable > departureTimeTables; /**Parallel array with tracks */
 
     public Station(String name) {
+        tracks = new ArrayList<Track>(1);
+        positions = new ArrayList<Position>(1);
+        maxNumberOfWaggonsAtPerons = new ArrayList<Integer>(1);
+        maxNumberOfWaggonsAtPerons.add( DEFAULT_MAX_NUM_WAGGONS);
+        trainQueues = new ArrayList<Queue<Train>>(1);
+        departureTimeTables = new ArrayList<AbstractTimeTable>(1);
+        setNewIdentity();
+    }
 
+    private void setNewIdentity() {
+        IdentityFactory factory = StationIdentityFactory.getInstance();
+        identity = factory.newIdentity();
     }
 
     public Station( String name, Track track, Position position){
-        IdentityFactory factory = StationIdentityFactory.getInstance();
-        identity = factory.newIdentity();
-
+        setNewIdentity();
         this.name = name;
 
         tracks = new ArrayList<Track>(1);
@@ -58,8 +67,7 @@ public class Station implements Serializable {
     }
 
     public Station( String name, Track track, Position position, int maxNumberOfWaggons){
-        IdentityFactory factory = StationIdentityFactory.getInstance();
-        identity = factory.newIdentity();
+        setNewIdentity();
 
         this.name = name;
 
@@ -86,9 +94,18 @@ public class Station implements Serializable {
         else{
             tracks.add( track);
             positions.add( position);
-            maxNumberOfWaggonsAtPerons.add( maxNumberOfWaggonsAtPerons.get( 0));
+            if( tracks.size() == 0){
+                maxNumberOfWaggonsAtPerons.add( DEFAULT_MAX_NUM_WAGGONS );
+            }
+            else{
+                maxNumberOfWaggonsAtPerons.add( maxNumberOfWaggonsAtPerons.get( 0));
+            }
+
             trainQueues.add( new LinkedList<Train>());
-            departureTimeTables.add( null);
+            departureTimeTables.add(null);
+            if( track.getStations().size() == 0 || !track.getStations().contains(this) ) {
+                track.addStation(this);
+            }
         }
     }
 
@@ -130,6 +147,9 @@ public class Station implements Serializable {
             int index = tracks.indexOf( track);
             if( departureTimeTables.get( index) == null)
                 throw new NoTimeTableException();
+            if( trainQueues.get(index) == null){
+                trainQueues.set(  index, new LinkedList<Train>() );
+            }
             trainQueues.get(index).add(train);
         }
         else throw new StationNotInTrackException();
@@ -152,7 +172,6 @@ public class Station implements Serializable {
     }
 
     public Identity getIdentity() {
-
         return identity;
     }
 
@@ -174,5 +193,9 @@ public class Station implements Serializable {
     @Override
     public int hashCode() {
         return getIdentity().hashCode();
+    }
+
+    protected List<Track> getTracks() {
+        return tracks;
     }
 }

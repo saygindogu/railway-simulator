@@ -28,7 +28,7 @@ public class TrainBuilder {
     public TrainBuilder() {
         destination = null;
         speed = Train.DEFAULT_SPEED;
-        prototype = null;
+        this.prototype = Waggon.DEFAULT;
         initialDirection = new SimpleDirection( true);
         timeTable = new SimpleTimeTable( new SimpleTime(0), SimpleTime.ONE_HOUR);
         waggonCount = Train.DEFAULT_WAGGON_COUNT;

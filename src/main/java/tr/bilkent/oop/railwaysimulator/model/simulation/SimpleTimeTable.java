@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class SimpleTimeTable implements AbstractTimeTable {
     public static final int DEFAULT_REPETITION = 1000;
+    public static final AbstractTimeTable DEFAULT = new SimpleTimeTable();
     private List<AbstractTime> times;
     private long period;
     private int last;

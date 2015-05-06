@@ -9,6 +9,7 @@ import java.io.Serializable;
  */
 public class Waggon implements Serializable {
     public static final int DEFAULT_CAPACITY = 100;
+    public static final Waggon DEFAULT = new Waggon(DEFAULT_CAPACITY);
     private int capacity;
 
 

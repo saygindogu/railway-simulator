@@ -4,6 +4,7 @@ import tr.bilkent.oop.railwaysimulator.model.user.User;
 import tr.bilkent.oop.railwaysimulator.model.user.UserGroup;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,6 +33,7 @@ public class RailwaySystem implements Serializable {
         this.owner = owner;
         this.group = null;
         this.permissions = new RailwayPermissions(); //set permissions to default
+        tracks = new ArrayList<Track>(1);
     }
 
     protected UserGroup getGroup() {
