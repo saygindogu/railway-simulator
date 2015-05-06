@@ -37,6 +37,21 @@ public class DynamicTrain implements DynamicObject {
         this.speed = train.getSpeed();
     }
 
+
+    public DynamicTrain(DynamicTrain train) {
+        waggons = new ArrayList<DynamicWaggon>( train.waggons.size() );
+        for (DynamicWaggon waggon : train.waggons) {
+            waggons.add( new DynamicWaggon(waggon ));
+        }
+        this.train = train.train;
+        currentPosition = new SimplePosition( train.currentPosition.getDistance() );
+        currentDirection = new SimpleDirection( train.currentDirection );
+        speed = train.speed;
+        currentTrack = train.currentTrack; /* No need to copy because this field refers to a static object during simulation */
+        targetStation = train.targetStation; /* No need to copy because this field refers to a static object during simulation */
+
+    }
+
     public void tick(TimeInterval dt) {
         Position newPosition = new SimplePosition( ((SimplePosition) currentPosition).getDistance() + convertToMetersPerMiliSeconds(speed) * currentDirection.getCoefficent() );
         Position stationPosision = RailwaySystemFacade.getInstance().getFirstStationPositionsBetween(currentTrack, currentPosition, newPosition);

@@ -1,6 +1,7 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
 import tr.bilkent.oop.railwaysimulator.model.exception.NotOnCurrentSystemException;
+import tr.bilkent.oop.railwaysimulator.model.exception.SessionAlreadyStartedException;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Train;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.TrainBuilder;
@@ -109,9 +110,10 @@ public class RailwaySystemFacade {
         return currentSystem.getOwner().equals( currentUser );
     }
 
-    public void addNewTrackToCurrentSystem(){
-        Track track = new Track( 50, 10);
+    public Track addNewTrackToCurrentSystem(){
+        Track track = new Track( 50, 10); //TODO make these magic numbers constant so we can understand what the hell do those mean.
         currentSystem.getTracks().add( track);
+        return track;
     }
 
     public void addNewTrackToCurrentSystem( Station station){
@@ -130,6 +132,7 @@ public class RailwaySystemFacade {
 
     public void addNewTrainTo( Track track, Station station){
         //TODO check modify rights
+        //TODO th?s must be spes?f?c to the trac
         if( isOnCurrentSystem( station) ){
             Train train;
             TrainBuilder builder = new TrainBuilder();
@@ -191,5 +194,23 @@ public class RailwaySystemFacade {
             return track.getWaitingTime().getTimestamp();
         }
         throw new NotOnCurrentSystemException();
+    }
+
+    public void setUser(User user) {
+        if( currentUser != null)
+            throw new SessionAlreadyStartedException();
+        this.currentUser = user;
+    }
+
+    public void logout(){
+        currentUser = null;
+    }
+
+    public void createNewSystem() {
+        currentSystem = new RailwaySystem( currentUser );
+    }
+
+    public List<Track> getTracksOnSystem() {
+        return currentSystem.getTracks();
     }
 }

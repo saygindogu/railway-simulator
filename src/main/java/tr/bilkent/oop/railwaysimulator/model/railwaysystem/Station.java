@@ -31,6 +31,10 @@ public class Station implements Serializable {
     private List< Queue<Train> > trainQueues; /**Parallel array with tracks */
     private List< AbstractTimeTable > departureTimeTables; /**Parallel array with tracks */
 
+    public Station(String name) {
+
+    }
+
     public Station( String name, Track track, Position position){
         IdentityFactory factory = StationIdentityFactory.getInstance();
         identity = factory.newIdentity();

@@ -80,8 +80,7 @@ public class SimpleSimulation implements Simulation {
     }
 
     private SimulationState getStateSnapShot() {
-        //TODO ...
-        return null;
+        return new SimpleSimulationState( currentTime, dynamicTrains, dispachers);
     }
 
     public TrainDispacher getDispacher(Track track, Position position) {

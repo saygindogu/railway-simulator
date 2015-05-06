@@ -14,7 +14,12 @@ public class DynamicWaggon implements DynamicObject {
         currentLoad = load;
     }
 
+    public DynamicWaggon(DynamicWaggon waggon) {
+        this.waggon = waggon.waggon;
+        currentLoad = waggon.currentLoad;
+    }
+
     public void tick(TimeInterval dt) {
-        //nothing
+        //nothing, waggon changes is not supported yet.
     }
 }

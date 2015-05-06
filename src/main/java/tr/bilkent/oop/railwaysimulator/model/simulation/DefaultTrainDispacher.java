@@ -5,6 +5,7 @@ import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Train;
 import tr.bilkent.oop.railwaysimulator.model.railwaysystem.*;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -23,6 +24,15 @@ public class DefaultTrainDispacher implements TrainDispacher {
         this.track = track;
         this.timeTable = timetable;
         this.position = position;
+    }
+
+    public DefaultTrainDispacher(DefaultTrainDispacher trainDispacher) {
+        this.track = trainDispacher.track;
+        trains = new LinkedList<Train>();
+        trains.addAll( trainDispacher.trains ); /* no need to copy train objects*/
+        timeTable = trainDispacher.timeTable; /* Dynamic time tables is not supported, so no need to copy this.*/
+        position = trainDispacher.position;
+        now = trainDispacher.now;
     }
 
     public void dispach() {

@@ -13,6 +13,10 @@ public class SimpleDirection extends Direction {
         this.positive = positive;
     }
 
+    public SimpleDirection(SimpleDirection currentDirection) {
+        positive = currentDirection.isPositive();
+    }
+
     public boolean isPositive() {
         return positive;
     }
