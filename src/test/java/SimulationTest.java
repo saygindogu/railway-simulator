@@ -33,7 +33,7 @@ public class SimulationTest{
             stations.add( new Station( stationName ) );
         }
         for (Station station : stations) {
-            systemFacade.addStationTo( track, SimplePosition.ZERO, station);
+            systemFacade.addStationTo( track, station , SimplePosition.ZERO);
         }
         systemFacade.addNewTimeTableTo( track, systemFacade.getFirstStationOn(track) );
         systemFacade.addNewTrainTo( track, systemFacade.getFirstStationOn(track) );

@@ -1,5 +1,7 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
+import javafx.geometry.Pos;
+import tr.bilkent.oop.railwaysimulator.model.exception.CorruptedStationException;
 import tr.bilkent.oop.railwaysimulator.model.simulation.AbstractTimeTable;
 import tr.bilkent.oop.railwaysimulator.model.exception.NoTimeTableException;
 import tr.bilkent.oop.railwaysimulator.model.exception.StationAlreadyInTrackException;
@@ -9,6 +11,7 @@ import tr.bilkent.oop.railwaysimulator.model.identity.IdentityFactory;
 import tr.bilkent.oop.railwaysimulator.model.identity.StationIdentityFactory;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Train;
+import tr.bilkent.oop.railwaysimulator.model.simulation.SimpleTimeTable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,7 +38,6 @@ public class Station implements Serializable {
         tracks = new ArrayList<Track>(1);
         positions = new ArrayList<Position>(1);
         maxNumberOfWaggonsAtPerons = new ArrayList<Integer>(1);
-        maxNumberOfWaggonsAtPerons.add( DEFAULT_MAX_NUM_WAGGONS);
         trainQueues = new ArrayList<Queue<Train>>(1);
         departureTimeTables = new ArrayList<AbstractTimeTable>(1);
         setNewIdentity();
@@ -64,6 +66,7 @@ public class Station implements Serializable {
 
         departureTimeTables = new ArrayList<AbstractTimeTable>(1);
         departureTimeTables.add( null);
+        checkIntegrity();
     }
 
     public Station( String name, Track track, Position position, int maxNumberOfWaggons){
@@ -85,28 +88,47 @@ public class Station implements Serializable {
 
         departureTimeTables = new ArrayList<AbstractTimeTable>(1);
         departureTimeTables.add( null);
+        checkIntegrity();
     }
 
+    /**
+     *
+     * Warning: This should be called strictly before track's addStation method.
+     *
+     * @param track the track that this station will be added on.
+     */
+    protected void addThisTo( Track track){
+        addThisTo( track, null); // handle with care..
+    }
+
+    /**
+     *
+     * Warning: This should be called strictly before track's addStation method.
+     *
+     * @param track the track that this station will be added on.
+     */
     protected void addThisTo( Track track, Position position){
         if( tracks.contains( track) ){
             throw new StationAlreadyInTrackException();
         }
         else{
-            tracks.add( track);
-            positions.add( position);
-            if( tracks.size() == 0){
-                maxNumberOfWaggonsAtPerons.add( DEFAULT_MAX_NUM_WAGGONS );
-            }
-            else{
-                maxNumberOfWaggonsAtPerons.add( maxNumberOfWaggonsAtPerons.get( 0));
-            }
-
-            trainQueues.add( new LinkedList<Train>());
-            departureTimeTables.add(null);
-            if( track.getStations().size() == 0 || !track.getStations().contains(this) ) {
+            addNewEntriesToLists(track, position);
+            if( !track.getStations().contains(this) ) {
                 track.addStation(this);
             }
+            else{
+                System.out.println("We are in this unknown state!!");
+            }
         }
+        checkIntegrity();
+    }
+
+    private void addNewEntriesToLists( Track track, Position position) {
+        tracks.add( track);
+        positions.add( position);
+        maxNumberOfWaggonsAtPerons.add( DEFAULT_MAX_NUM_WAGGONS);
+        trainQueues.add( new LinkedList<Train>());
+        departureTimeTables.add( null);
     }
 
     protected void removeThisFrom( Track track){
@@ -114,8 +136,31 @@ public class Station implements Serializable {
             int index = tracks.indexOf( track);
             tracks.remove(index);
             positions.remove(index);
+            maxNumberOfWaggonsAtPerons.remove(index);
+            departureTimeTables.remove(index);
+            trainQueues.remove( index);
+            checkIntegrity();
         }
         else throw new StationNotInTrackException();
+    }
+
+    private void checkIntegrity() {
+        int trackCount = tracks.size();
+        System.out.println( "tracks side:" + tracks.size());
+        boolean noProblem = true;
+        System.out.println( noProblem);
+        noProblem &= trackCount == positions.size();
+        System.out.println( noProblem + "pos" + positions.size() );
+        noProblem &= trackCount == maxNumberOfWaggonsAtPerons.size();
+        System.out.println( noProblem + "maxwagon" + maxNumberOfWaggonsAtPerons.size() );
+        noProblem &= trackCount == trainQueues.size();
+        System.out.println( noProblem + "que" + trainQueues.size() );
+        noProblem &= trackCount == departureTimeTables.size();
+        System.out.println( noProblem + "dep" + departureTimeTables.size() );
+
+        if( !noProblem){
+            throw new CorruptedStationException();
+        }
     }
 
     protected Position getPositionOn( Track track){
@@ -140,6 +185,8 @@ public class Station implements Serializable {
             departureTimeTables.set(index, timetable);
         }
         else throw new StationNotInTrackException();
+
+        checkIntegrity();
     }
 
     protected void addTrainOn( Track track, Train train){
@@ -153,6 +200,8 @@ public class Station implements Serializable {
             trainQueues.get(index).add(train);
         }
         else throw new StationNotInTrackException();
+
+        checkIntegrity();
     }
 
     protected Queue<Train> getTrainQueueOn( Track track) {
@@ -197,5 +246,20 @@ public class Station implements Serializable {
 
     protected List<Track> getTracks() {
         return tracks;
+    }
+
+    public void setPositionOn(Track track, Position position) {
+        if( tracks.contains( track) ){
+            int index = tracks.indexOf( track);
+            positions.set( index, position);
+        }
+        else throw new StationNotInTrackException();
+        checkIntegrity();
+    }
+
+    public void abortAddStation(Track track) {
+        if( tracks.contains(track))
+            removeThisFrom( track);
+        checkIntegrity();
     }
 }

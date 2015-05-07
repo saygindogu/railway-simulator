@@ -69,10 +69,18 @@ public class RailwaySystemFacade {
     }
 
 
-    public void addStationTo( Track track, Position position, Station station){
+    public void addStationTo( Track track, Station station, Position position){
         //TODO modify right check
         if( isOnCurrentSystem( track)){
             station.addThisTo(track, position);
+        }
+        else throw new NotOnCurrentSystemException();
+    }
+
+    public void addStationTo( Track track, Station station){
+        //TODO modify right check
+        if( isOnCurrentSystem( track)){
+            station.addThisTo(track);
         }
         else throw new NotOnCurrentSystemException();
 

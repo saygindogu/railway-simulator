@@ -1,6 +1,8 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
-import tr.bilkent.oop.railwaysimulator.model.exception.FIRST_STATION_POSITON_EXCEPTION;
+import javafx.util.Pair;
+import tr.bilkent.oop.railwaysimulator.model.exception.*;
+import tr.bilkent.oop.railwaysimulator.model.identity.StationIdentityFactory;
 import tr.bilkent.oop.railwaysimulator.model.simulation.AbstractTime;
 import tr.bilkent.oop.railwaysimulator.model.simulation.SimpleTime;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
@@ -39,48 +41,117 @@ public class Track implements Serializable {
         stationList = new ArrayList<Station>();
     }
 
-    protected boolean addStation( Station s){
-        if( s == null){
-            System.out.println( "hoy hoy null");
-            return false;
+    /**
+    *    This method determines the new position of the station and sets it on the station. ,
+    *    After, it calls addStation( s, newPosition );
+    *
+    *    Warning this method have to be called strictly after station's
+    *    addThisTo( Track track, Position position) method!
+    *    else Station will throw an exception ( StationNotOnTrackException )
+    */
+    protected void addStation( Station station){
+        if( station == null){
+            throw new NullStationException();
         }
         if( stationList.size() >= maxNumverOfStations ){
-            return false;
+            throw new ExceededStationLimitException();
         }
-        if( !s.getTracks().contains( this ) )
-        {
-            if( s.getPositionOn(this) == null ){
-                if( stationList.size() == 0){
-                    s.addThisTo(this, SimplePosition.ZERO );
-                }
-                else{
-                    s.addThisTo(this, new SimplePosition(((SimplePosition) stationList.get(stationList.size() - 1).getPositionOn(this)).getDistance() + DEFAULT_DISTANCE_BETWEEN_STATIONS));
-                }
+
+        Position newPosition;
+        if( station.getPositionOn(this) == null ){
+            if( stationList.size() == 0){
+                newPosition = SimplePosition.ZERO;
             }
-            else if( stationList.size() == 0 && !s.getPositionOn( this).equals( SimplePosition.ZERO ) ){
-                throw new FIRST_STATION_POSITON_EXCEPTION();
+            else{
+                newPosition = getPositionOfStationAfterCurrentLastStation();
             }
+            station.setPositionOn( this, newPosition);
         }
-        stationList.add( s);
-        return true;
+        else{
+            newPosition = station.getPositionOn(this);
+        }
+        addStation(station, newPosition);
+
     }
 
-    protected boolean addStation( Station s, Position position){
+    /**
+     *    This method determines the new position of the station and sets it on the station. ,
+     *    After, it calls addStation( s, newPosition );
+     *
+     *    Warning this method have to be called strictly after station's
+     *    addThisTo( Track track, Position position) method!
+     *    else Station will throw an exception ( StationNotOnTrackException )
+     */
+    protected void addStation( Station s, Position position){
         if( s == null){
-            System.out.println( "hoy hoy null");
-            return false;
+            throw  new NullStationException();
         }
+
+        if( position == null){
+            s.abortAddStation( this);
+            throw new NullPositionException();
+        }
+
+
 
         if( stationList.size() >= maxNumverOfStations ){
-            return false;
+            s.abortAddStation( this);
+            throw new ExceededStationLimitException();
         }
-        else if( position.getDistanceFrom( stationList.get(stationList.size()-1).getPositionOn(this)) > ministanceBetweenStations ){
-            return false;
+
+        if( !s.getPositionOn( this).equals( position) ){
+            s.abortAddStation( this);
+            throw new StationPositionMismatchException();
         }
-        s.addThisTo(this, new SimplePosition(((SimplePosition) stationList.get(stationList.size() - 1).getPositionOn(this)).getDistance() + DEFAULT_DISTANCE_BETWEEN_STATIONS));
-        stationList.add( s);
-        return true;
+
+        if( stationList.size() == 0 && !s.getPositionOn( this).equals( SimplePosition.ZERO ) ){
+            s.abortAddStation( this);
+            throw new FirstStationPositionException();
+        }
+        else if( stationList.size() == 0){
+            stationList.add( s);
+            return;
+        }
+        /* integrity checks and corner cases ends here.*/
+
+        Pair< Station, Station> stationPair = getLeftAndRightStations( position);
+        if( stationPair.getValue() != null ){
+            if( position.getDistanceFrom(  stationPair.getValue().getPositionOn(this) ) > ministanceBetweenStations ){
+                s.abortAddStation(this);
+                throw new MinimumDistanceBetweenStationsException();
+            }
+        }
+
+        if (position.getDistanceFrom(stationPair.getKey().getPositionOn(this)) > ministanceBetweenStations ){
+            s.abortAddStation(this);
+            System.out.println( position.getDistanceFrom(stationPair.getKey().getPositionOn(this)) + " " + ministanceBetweenStations );
+            throw new MinimumDistanceBetweenStationsException();
+        }
+
+        stationList.add(stationList.indexOf(stationPair.getKey()) + 1, s);
     }
+
+    protected Pair<Station,Station> getLeftAndRightStations(Position position) {
+        Station left, right;
+        left = right = null;
+        for ( int i = 0; i < stationList.size(); i++) {
+            if( position.compareTo( stationList.get(i).getPositionOn(this)) > 0 ){
+                left = stationList.get( i - 1);
+                right = stationList.get( i);
+                break;
+            }
+        }
+        if( left == null){
+            left = getLastStation();
+        }
+        return new Pair<Station, Station>(left,right);
+
+    }
+
+    private SimplePosition getPositionOfStationAfterCurrentLastStation() {
+        return new SimplePosition(((SimplePosition) stationList.get(stationList.size() - 1).getPositionOn(this) ).getDistance() + DEFAULT_DISTANCE_BETWEEN_STATIONS);
+    }
+
 
     protected List<Station> getStations() {
         return stationList;
@@ -113,10 +184,12 @@ public class Track implements Serializable {
     }
 
     protected Station getLastStation() {
+        if( stationList.size() <= 0) return null;
         return stationList.get( stationList.size() - 1 );
     }
 
     protected Station getFirstStation() {
+        if( stationList.size() <= 0) return null;
         return stationList.get( 0 );
     }
 }

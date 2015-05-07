@@ -18,7 +18,7 @@ public class SimplePosition implements Position {
 
     public float getDistanceFrom(Position other) {
         if( other instanceof SimplePosition){
-            return getDistanceFrom( other);
+            return Math.abs(((SimplePosition) other).distance - this.distance);
         }
         else throw new UnknownComparisonException();
     }
