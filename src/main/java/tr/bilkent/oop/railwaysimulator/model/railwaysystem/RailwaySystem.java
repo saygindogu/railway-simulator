@@ -71,4 +71,17 @@ public class RailwaySystem implements Serializable {
         return false;
 
     }
+
+    @Override
+    public String toString() {
+        String s = "RailwaySystem{" +
+                "owner=" + owner.toString() +
+                ", permissions=" + permissions
+                + "\nTracks=\n---\n";
+        for (Track track : tracks) {
+            s += track.toString() + "\n-----\n";
+        }
+        return s + "}";
+
+    }
 }

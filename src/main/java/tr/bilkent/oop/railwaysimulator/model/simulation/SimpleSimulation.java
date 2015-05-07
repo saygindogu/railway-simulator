@@ -26,9 +26,12 @@ public class SimpleSimulation implements Simulation {
     private Queue<SimulationState> stateQueue;
 
 
+    public void resetSimulation(){
+        //TODO clear state queue ( maybe save it to disk) clear dynamic trains, get dispachers again.
+    }
     /*Singleton Pattern*/
     private SimpleSimulation(){
-        timeInterval = DEFAULT_TIME_SIMULATION.getTimestamp();
+        timeInterval = DEFAULT_INTERVAL_SIMULATION.getTimestamp();
         currentTime = SimpleTime.BIRTH_OF_CRONUS;
         stateQueue = new LinkedList<SimulationState>();
         dynamicTrains = new ArrayList<DynamicTrain>();
@@ -51,6 +54,8 @@ public class SimpleSimulation implements Simulation {
         while( time.compareTo( currentTime) < 0 ){
             tick();
         }
+        System.out.println( "last time in simulation:" +  currentTime.toString() );
+        System.out.println( "parameter in simulation:" + time);
     }
 
     public Queue<SimulationState> getStateQueue() {
@@ -71,12 +76,17 @@ public class SimpleSimulation implements Simulation {
         TimeInterval interval = new TimeInterval( now, future);
         for (DynamicTrain dynamicTrain : dynamicTrains) {
             dynamicTrain.tick( interval);
+            System.out.println( "hop?" );
         }
         for (TrainDispacher dispacher : dispachers) {
             dispacher.tick( interval);
         }
         currentTime = future;
         stateQueue.add( getStateSnapShot() );
+    }
+
+    void addDynamicTrain(DynamicTrain dynamicTrain){
+        dynamicTrains.add( dynamicTrain);
     }
 
     private SimulationState getStateSnapShot() {

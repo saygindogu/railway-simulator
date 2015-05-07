@@ -35,6 +35,7 @@ public class Station implements Serializable {
     private List< AbstractTimeTable > departureTimeTables; /**Parallel array with tracks */
 
     public Station(String name) {
+        this.name = name;
         tracks = new ArrayList<Track>(1);
         positions = new ArrayList<Position>(1);
         maxNumberOfWaggonsAtPerons = new ArrayList<Integer>(1);
@@ -117,7 +118,7 @@ public class Station implements Serializable {
                 track.addStation(this);
             }
             else{
-                System.out.println("We are in this unknown state!!");
+                System.err.println("We are in this unknown state!!");
             }
         }
         checkIntegrity();
@@ -146,17 +147,12 @@ public class Station implements Serializable {
 
     private void checkIntegrity() {
         int trackCount = tracks.size();
-        System.out.println( "tracks side:" + tracks.size());
+
         boolean noProblem = true;
-        System.out.println( noProblem);
         noProblem &= trackCount == positions.size();
-        System.out.println( noProblem + "pos" + positions.size() );
         noProblem &= trackCount == maxNumberOfWaggonsAtPerons.size();
-        System.out.println( noProblem + "maxwagon" + maxNumberOfWaggonsAtPerons.size() );
         noProblem &= trackCount == trainQueues.size();
-        System.out.println( noProblem + "que" + trainQueues.size() );
         noProblem &= trackCount == departureTimeTables.size();
-        System.out.println( noProblem + "dep" + departureTimeTables.size() );
 
         if( !noProblem){
             throw new CorruptedStationException();
@@ -261,5 +257,17 @@ public class Station implements Serializable {
         if( tracks.contains(track))
             removeThisFrom( track);
         checkIntegrity();
+    }
+
+    @Override
+    public String toString() {
+        if( positions.size() > 0){
+            return "Station{" +
+                    "name='" + name + '\'' +
+                    "positionOn(0):" + positions.get(0).toString() +
+            '}';
+        }
+        else return "Station {name="+name+"}";
+
     }
 }

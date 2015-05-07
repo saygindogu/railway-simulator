@@ -64,6 +64,7 @@ public class SimpleTimeTable implements AbstractTimeTable {
 
 
     public AbstractTime getNextTime( AbstractTime now){
+        //TODO returns wrong time in periodical timetables. Fix it. it is supposed to retun base()+period, base+2*period and so on. the last one should be base()+last*period.
         if( now.compareTo( baseTime() ) > 0 ){
             if( now.compareTo( lastTime() ) <= 0 ) {
                 if (isPeriodical()) {
@@ -83,7 +84,7 @@ public class SimpleTimeTable implements AbstractTimeTable {
     }
 
     public AbstractTime getPreviousTime( AbstractTime now){
-        // TODO implement this
+        // TODO implement this later
         throw new NotImplementedException();
     }
 

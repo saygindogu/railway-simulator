@@ -30,4 +30,11 @@ public class SimpleDirection extends Direction {
         boolean direction = currentPosition.compareTo( newPosition) < 0 ;
         return new SimpleDirection( direction);
     }
+
+    @Override
+    public String toString() {
+        return "SimpleDirection{" +
+                "positive=" + positive +
+                '}';
+    }
 }

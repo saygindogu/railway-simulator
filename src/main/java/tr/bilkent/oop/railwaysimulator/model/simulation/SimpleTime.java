@@ -29,4 +29,11 @@ public class SimpleTime extends AbstractTime {
     public long getTimeDistanceFrom(AbstractTime otherTime) {
         return timestamp - otherTime.getTimestamp();
     }
+
+    @Override
+    public String toString() {
+        return "SimpleTime{" +
+                "timestamp=" + timestamp +
+                '}';
+    }
 }

@@ -21,6 +21,8 @@ public class DynamicTrain implements DynamicObject {
     private int speed;
     private Track currentTrack;
     private Station targetStation;
+    private boolean waitingAtStation;
+    private AbstractTime stationWaitTimeEnd;
 
 
     public DynamicTrain( Track track, Train train, Position currentPosition, Direction currentDirection, Station targetStation){
@@ -35,6 +37,8 @@ public class DynamicTrain implements DynamicObject {
         this.targetStation = targetStation;
 
         this.speed = train.getSpeed();
+        waitingAtStation = false;
+        stationWaitTimeEnd = null;
     }
 
 
@@ -49,25 +53,42 @@ public class DynamicTrain implements DynamicObject {
         speed = train.speed;
         currentTrack = train.currentTrack; /* No need to copy because this field refers to a static object during simulation */
         targetStation = train.targetStation; /* No need to copy because this field refers to a static object during simulation */
+        waitingAtStation = false;
+        stationWaitTimeEnd = null;
 
     }
 
     public void tick(TimeInterval dt) {
-        Position newPosition = new SimplePosition( ((SimplePosition) currentPosition).getDistance() + convertToMetersPerMiliSeconds(speed) * currentDirection.getCoefficent() );
-        Position stationPosision = RailwaySystemFacade.getInstance().getFirstStationPositionsBetween(currentTrack, currentPosition, newPosition);
-        if( stationPosision == null){
-            currentPosition = (SimplePosition)newPosition;
+        TimeInterval timeInterval;
+        if( waitingAtStation && dt.end().compareTo( stationWaitTimeEnd) > 0){
+            timeInterval = dt.truncateFromBeggining( stationWaitTimeEnd.getTimeDistanceFrom(dt.end()));
         }
         else{
-            Station station = RailwaySystemFacade.getInstance().getStationOnPosition( currentTrack, stationPosision );
+            timeInterval = dt;
+        }
+        System.out.println("meter milisecond: " + convertToMetersPerMiliSeconds(speed));
+        long elapsedTime = timeInterval.end().getTimestamp() - timeInterval.begin().getTimestamp(); //TODO please make this a function in TimeInterval...
+        Position newPosition = new SimplePosition(  currentPosition.getDistance() + convertToMetersPerMiliSeconds(speed) * currentDirection.getCoefficent() * elapsedTime );//TODO please make this multiline to have readibility
+        Position stationPosition = RailwaySystemFacade.getInstance().getFirstStationPositionsBetween(currentTrack, currentPosition, newPosition);
+        if( stationPosition == null){
+            currentPosition = (SimplePosition)newPosition;
+            System.out.println( "station is null");
+            //TODO this is always null somehow it is not finding the station at 250 meters. ( newPosition is exactly 250)
+        }
+        else{
+            Station station = RailwaySystemFacade.getInstance().getStationOnPosition( currentTrack, stationPosition );
             if( station.equals( targetStation ) ){
-                ((DefaultTrainDispacher) SimpleSimulation.getInstance().getDispacher(currentTrack, stationPosision)).addTrain( this);
+                ((DefaultTrainDispacher) SimpleSimulation.getInstance().getDispacher(currentTrack, stationPosition)).addTrain( this);
             }
             else{
-                long timePassed = getRequiredTimeToGo(stationPosision);
-                currentPosition = (SimplePosition)stationPosision;
+                long timePassed = getRequiredTimeToGo(stationPosition);
+                currentPosition = (SimplePosition)stationPosition;
                 long waitingTime = RailwaySystemFacade.getInstance().getWaitingTimeOf( currentTrack);
-                tick( dt.truncateFromBeggining( timePassed + waitingTime ) );
+                if( waitingTime > elapsedTime){
+                    stationWaitTimeEnd = new SimpleTime( timeInterval.begin().getTimestamp()+waitingTime ); // TODO this is probably wrong.
+                    /* check if timeInterval.begin() is really what we are looking for.. */
+                }
+                tick(timeInterval.truncateFromBeggining(timePassed + waitingTime));
             }
         }
     }
@@ -80,11 +101,20 @@ public class DynamicTrain implements DynamicObject {
     }
 
     private float convertToMetersPerMiliSeconds( int metersPerSeconds){
-        return metersPerSeconds / 1000;
+        return (float)metersPerSeconds / 1000;
         //TODO maybe introduce speed object because of these conversions
     }
 
     public Train getTrain() {
         return train;
+    }
+
+    @Override
+    public String toString() {
+        return "DynamicTrain{" +
+                "currentPosition=" + currentPosition.toString() +
+                ", currentDirection=" + currentDirection.toString() +
+                ", speed=" + speed +
+                '}';
     }
 }

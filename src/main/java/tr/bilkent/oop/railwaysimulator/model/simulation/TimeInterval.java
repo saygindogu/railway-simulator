@@ -25,4 +25,9 @@ public class TimeInterval {
     public AbstractTime end(){
         return interval.getValue();
     }
+
+    @Override
+    public String toString() {
+        return "TimeInterval{"+ interval.getKey().toString() + "," + interval.getValue().toString() +"}";
+    }
 }

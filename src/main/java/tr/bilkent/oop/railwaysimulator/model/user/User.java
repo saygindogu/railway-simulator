@@ -62,4 +62,11 @@ public class User {
     public int hashCode() {
         return getIdentity().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

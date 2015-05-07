@@ -50,4 +50,11 @@ public class SimplePosition implements Position {
     public int hashCode() {
         return (getDistance() != +0.0f ? Float.floatToIntBits(getDistance()) : 0);
     }
+
+    @Override
+    public String toString() {
+        return "SimplePos{" +
+                "distance=" + distance +
+                '}';
+    }
 }

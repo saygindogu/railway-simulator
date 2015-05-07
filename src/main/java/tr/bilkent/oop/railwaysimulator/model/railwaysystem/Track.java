@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class Track implements Serializable {
     public static final AbstractTime DEFAULT_WAITING_TIME = SimpleTime.ONE_MINUTE;
-    public static final int DEFAULT_DISTANCE_BETWEEN_STATIONS = 0;
+    public static final int DEFAULT_DISTANCE_BETWEEN_STATIONS = 250;
 
     private List<Station> stationList;
     private AbstractTime waitingTime;
@@ -92,8 +92,6 @@ public class Track implements Serializable {
             throw new NullPositionException();
         }
 
-
-
         if( stationList.size() >= maxNumverOfStations ){
             s.abortAddStation( this);
             throw new ExceededStationLimitException();
@@ -116,15 +114,14 @@ public class Track implements Serializable {
 
         Pair< Station, Station> stationPair = getLeftAndRightStations( position);
         if( stationPair.getValue() != null ){
-            if( position.getDistanceFrom(  stationPair.getValue().getPositionOn(this) ) > ministanceBetweenStations ){
+            if( position.getDistanceFrom(  stationPair.getValue().getPositionOn(this) ) < ministanceBetweenStations ){
                 s.abortAddStation(this);
                 throw new MinimumDistanceBetweenStationsException();
             }
         }
 
-        if (position.getDistanceFrom(stationPair.getKey().getPositionOn(this)) > ministanceBetweenStations ){
+        if ( position.getDistanceFrom(stationPair.getKey().getPositionOn(this)) < ministanceBetweenStations ){
             s.abortAddStation(this);
-            System.out.println( position.getDistanceFrom(stationPair.getKey().getPositionOn(this)) + " " + ministanceBetweenStations );
             throw new MinimumDistanceBetweenStationsException();
         }
 
@@ -135,8 +132,9 @@ public class Track implements Serializable {
         Station left, right;
         left = right = null;
         for ( int i = 0; i < stationList.size(); i++) {
-            if( position.compareTo( stationList.get(i).getPositionOn(this)) > 0 ){
-                left = stationList.get( i - 1);
+            if( position.compareTo( stationList.get(i).getPositionOn(this)) < 0 ){
+                if( i > 0)
+                    left = stationList.get( i - 1);
                 right = stationList.get( i);
                 break;
             }
@@ -149,7 +147,7 @@ public class Track implements Serializable {
     }
 
     private SimplePosition getPositionOfStationAfterCurrentLastStation() {
-        return new SimplePosition(((SimplePosition) stationList.get(stationList.size() - 1).getPositionOn(this) ).getDistance() + DEFAULT_DISTANCE_BETWEEN_STATIONS);
+        return new SimplePosition( ( (SimplePosition) stationList.get(stationList.size() - 1).getPositionOn(this) ).getDistance() + DEFAULT_DISTANCE_BETWEEN_STATIONS);
     }
 
 
@@ -191,5 +189,16 @@ public class Track implements Serializable {
     protected Station getFirstStation() {
         if( stationList.size() <= 0) return null;
         return stationList.get( 0 );
+    }
+
+    @Override
+    public String toString() {
+        String s =  "Track{ Stations:\n";
+        for (Station station : stationList) {
+            s += station.toString() + ",\n";
+        }
+        return s + "}";
+
+
     }
 }

@@ -36,16 +36,18 @@ public class DefaultTrainDispacher implements TrainDispacher {
     }
 
     public void dispach() {
-        Train train = trains.poll();
-        Station targetStation;
-        if( train.getDestination() != null ){
-            targetStation = train.getDestination();
+        if( trains.size() > 0) {
+            Train train = trains.poll();
+            Station targetStation;
+            if (train.getDestination() != null) {
+                targetStation = train.getDestination();
+            } else {
+                targetStation = RailwaySystemFacade.getInstance().getStationOnPosition(track, position);
+            }
+            DynamicTrain dynamicTrain = new DynamicTrain(track, train, position, train.getInitialDirection(), targetStation);
+            dynamicTrain.tick(new TimeInterval(now, future));
+            SimpleSimulation.getInstance().addDynamicTrain( dynamicTrain);
         }
-        else{
-            targetStation = RailwaySystemFacade.getInstance().getStationOnPosition( track, position);
-        }
-        DynamicTrain dynamicTrain = new DynamicTrain( track, train, position, train.getInitialDirection(), targetStation );
-        dynamicTrain.tick( new TimeInterval( now, future));
     }
 
     public Track getTrack() {
@@ -68,10 +70,21 @@ public class DefaultTrainDispacher implements TrainDispacher {
     public void tick(TimeInterval dt) {
         //TODO typecasting check
         SimpleTimeTable simpleTimeTable = (SimpleTimeTable) timeTable;
+        now = (SimpleTime) dt.begin();
+        future = (SimpleTime) dt.end();
         if( simpleTimeTable.getNextTime( dt.begin() ).compareTo( dt.end() ) < 0 ){
-            TimeInterval nextInterval = dt.truncateFromBeggining(simpleTimeTable.getNextTime(dt.begin()).getTimeDistanceFrom(dt.begin()));
+            AbstractTime nextDispachTime = simpleTimeTable.getNextTime(dt.begin());
+            long elapsedTime = nextDispachTime.getTimeDistanceFrom(dt.begin());
+            if( elapsedTime < 0){
+                // no more trains to  in this interval. We are done.
+                return;
+            }
+            else if( elapsedTime == 0){
+                elapsedTime++;
+            }
+            TimeInterval nextInterval = dt.truncateFromBeggining( elapsedTime );
             dispach();
-            tick( nextInterval);
+            tick(nextInterval);
         }
 
     }

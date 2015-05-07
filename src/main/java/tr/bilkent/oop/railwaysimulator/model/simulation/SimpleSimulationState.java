@@ -13,6 +13,17 @@ public class SimpleSimulationState implements SimulationState {
     private transient List< DynamicTrain > dynamicTrains;
     private transient List< TrainDispacher > dispachers;
 
+    @Override
+    public String toString() {
+        String s = "SimpleSimulationState{" +
+                "currentTime=" + currentTime.toString();
+
+        for (DynamicTrain dynamicTrain : dynamicTrains) {
+            s += dynamicTrain.toString() + ", ";
+        }
+        return  s + "}";
+    }
+
     public SimpleSimulationState( AbstractTime currentTime, List<DynamicTrain> trains, List<TrainDispacher> dispachers  ){
         this.currentTime = currentTime;
         this.dynamicTrains = new ArrayList<DynamicTrain>( trains.size() );
@@ -24,6 +35,8 @@ public class SimpleSimulationState implements SimulationState {
         for (TrainDispacher trainDispacher : dispachers) {
             this.dispachers.add( new DefaultTrainDispacher( (DefaultTrainDispacher) trainDispacher ));
         }
+
+
     }
 
 }
