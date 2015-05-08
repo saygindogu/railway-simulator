@@ -19,7 +19,7 @@ import java.util.concurrent.*;
  */
 public class SimpleSimulation implements Simulation {
 
-    private transient static SimpleSimulation instance;
+    private transient static SimpleSimulation instance = null;
     private transient long timeInterval;
     private transient AbstractTime currentTime;
     private transient List< DynamicTrain > dynamicTrains;
@@ -30,7 +30,9 @@ public class SimpleSimulation implements Simulation {
 
     public void resetSimulation(){
         //TODO clear state queue ( maybe save it to disk) clear dynamic trains, get dispachers again.
+       instance = null;
     }
+
     /*Singleton Pattern*/
     private SimpleSimulation(){
         timeInterval = DEFAULT_INTERVAL_SIMULATION.getTimestamp();
@@ -60,7 +62,7 @@ public class SimpleSimulation implements Simulation {
         {
             final Future<Object> f = service.submit(complicatedCalculation);
 
-            System.out.println(f.get( 1, TimeUnit.MINUTES));
+            f.get(1, TimeUnit.MINUTES);
         }
         catch (final TimeoutException e)
         {
@@ -92,18 +94,22 @@ public class SimpleSimulation implements Simulation {
         SimpleTime now = (SimpleTime) currentTime;
         SimpleTime future = new SimpleTime(  now.getTimestamp() + timeInterval );
         TimeInterval interval = new TimeInterval( now, future);
-        for ( int i = 0; i < dynamicTrains.size(); i++) {
-            dynamicTrains.get(i).tick(interval);
+        for (DynamicTrain train : dynamicTrains) {
+            train.tick( interval);
+            System.out.println( "Train tick is called.");
         }
+
         for (TrainDispacher dispacher : dispachers) {
             dispacher.tick( interval);
         }
         currentTime = future;
         stateQueue.add( getStateSnapShot() );
+
     }
 
     void addDynamicTrain(DynamicTrain dynamicTrain){
         dynamicTrains.add( dynamicTrain);
+        System.out.println( "Add Dynamic train called:" + dynamicTrains.size() );
     }
 
     private SimulationState getStateSnapShot() {
@@ -121,6 +127,7 @@ public class SimpleSimulation implements Simulation {
 
     public void removeDynamicTrain(DynamicTrain dynamicTrain) {
         dynamicTrains.remove( dynamicTrain);
+        System.out.println( "remove dynamic train is called.");
     }
 
     public void destroy() {
