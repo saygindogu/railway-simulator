@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class SimulationTest{
 
-    String[] stationNames = { "Ankara", "Polatl?", "Eski?ehir", "Bursa", "?stanbul" };
+    String[] stationNames = { "Ankara", "Polatli", "Eskisehir", "Bursa", "Istanbul" };
     User user;
     List<Station> stations;
     Track track;
@@ -60,18 +60,10 @@ public class SimulationTest{
         sim.tick();
         Assert.assertTrue(sim.getStateQueue().size() == 1);
         sim.tick();
-        for (SimulationState simulationState : sim.getStateQueue()) {
-            System.out.println( simulationState.toString() );
-        }
-        for( int i = 0; i < 28; i++){
-            sim.tick();
-        }
-        for (SimulationState simulationState : sim.getStateQueue()) {
-            System.out.println( simulationState.toString() );
-        }
-        //TODO observe the code output here. The train is going in right speed but it is not stopping at the stations. The relevant code is DynamicTrain's tick() method. debug this.
 
-        //TODO check what happens with trains with destinations. They are supposed to stop at destination station. Currently the trains' destinations are their origin.
+
+
+        //TODO check why there is a second train that is being dispach
 
         //TODO observe multiple trains' behaviors.
     }
@@ -80,6 +72,14 @@ public class SimulationTest{
     public void bigSimulateTest() throws Exception {
         SimpleSimulation sim = SimpleSimulation.getInstance();
         sim.simulate();
+        System.out.println( sim.getStateQueue().size() );
+        int count = 0;
+        for (SimulationState simulationState : sim.getStateQueue()) {
+            System.out.println( simulationState );
+            if( count++ > 1000) break;
+        }
+        //TODO observe the code output here. The train is going in right speed but it is not stopping at the stations.
+
     }
 
     @After
@@ -88,5 +88,6 @@ public class SimulationTest{
         stations = null;
         track = null;
         systemFacade = null;
+        SimpleSimulation.getInstance().destroy();
     }
 }

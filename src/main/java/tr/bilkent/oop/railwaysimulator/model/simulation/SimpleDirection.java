@@ -37,4 +37,12 @@ public class SimpleDirection extends Direction {
                 "positive=" + positive +
                 '}';
     }
+
+    @Override
+    public void changeDirection() {
+        if( isPositive() )
+            positive = false;
+        else
+            positive = true;
+    }
 }

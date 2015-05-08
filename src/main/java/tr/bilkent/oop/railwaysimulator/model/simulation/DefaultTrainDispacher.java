@@ -45,8 +45,16 @@ public class DefaultTrainDispacher implements TrainDispacher {
                 targetStation = RailwaySystemFacade.getInstance().getStationOnPosition(track, position);
             }
             DynamicTrain dynamicTrain = new DynamicTrain(track, train, position, train.getInitialDirection(), targetStation);
+            SimpleSimulation.getInstance().addDynamicTrain(dynamicTrain);
+
+            dynamicTrain.moveEpsilon();
+            now = new SimpleTime( now.getTimestamp() + 1);
             dynamicTrain.tick(new TimeInterval(now, future));
-            SimpleSimulation.getInstance().addDynamicTrain( dynamicTrain);
+            System.out.println(now);
+            System.out.println(future);
+
+            System.out.println( "dispach");
+            //TODO the train is not added to the simulation's list or it is not saved to the state. Or it is immidiately removed. find out why and fix it.
         }
     }
 

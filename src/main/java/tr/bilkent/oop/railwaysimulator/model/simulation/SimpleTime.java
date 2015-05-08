@@ -5,7 +5,7 @@ package tr.bilkent.oop.railwaysimulator.model.simulation;
  *
  */
 public class SimpleTime extends AbstractTime {
-    public static final AbstractTime ONE_DAY = new SimpleTime( 86400000);
+    public static final AbstractTime FIVE_HOURS = new SimpleTime( 18000000);
     public static final AbstractTime ONE_HOUR = new SimpleTime( 360000);
     public static final AbstractTime ONE_MINUTE = new SimpleTime( 60000);
     public static final AbstractTime ONE_SECOND = new SimpleTime( 1000);

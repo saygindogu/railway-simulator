@@ -60,37 +60,59 @@ public class DynamicTrain implements DynamicObject {
 
     public void tick(TimeInterval dt) {
         TimeInterval timeInterval;
-        if( waitingAtStation && dt.end().compareTo( stationWaitTimeEnd) > 0){
-            timeInterval = dt.truncateFromBeggining( stationWaitTimeEnd.getTimeDistanceFrom(dt.end()));
+        if( waitingAtStation ){
+            if( dt.end().compareTo( stationWaitTimeEnd) > 0) {
+                moveEpsilon();
+                timeInterval = dt.truncateFromBeggining(stationWaitTimeEnd.getTimeDistanceFrom(dt.end()));
+                waitingAtStation = false;
+                stationWaitTimeEnd = null;
+            }
+            else{
+                return; // it will wait until the time interval ends.
+                //TODO dynamic waggon stuff goes here. This is not supported in this version. maybe we'll do it in the future.
+            }
         }
-        else{
+        else{ //not waiting at station.
             timeInterval = dt;
         }
-        System.out.println("meter milisecond: " + convertToMetersPerMiliSeconds(speed));
         long elapsedTime = timeInterval.end().getTimestamp() - timeInterval.begin().getTimestamp(); //TODO please make this a function in TimeInterval...
         Position newPosition = new SimplePosition(  currentPosition.getDistance() + convertToMetersPerMiliSeconds(speed) * currentDirection.getCoefficent() * elapsedTime );//TODO please make this multiline to have readibility
         Position stationPosition = RailwaySystemFacade.getInstance().getFirstStationPositionsBetween(currentTrack, currentPosition, newPosition);
         if( stationPosition == null){
             currentPosition = (SimplePosition)newPosition;
-            System.out.println( "station is null");
-            //TODO this is always null somehow it is not finding the station at 250 meters. ( newPosition is exactly 250)
         }
         else{
-            Station station = RailwaySystemFacade.getInstance().getStationOnPosition( currentTrack, stationPosition );
-            if( station.equals( targetStation ) ){
-                ((DefaultTrainDispacher) SimpleSimulation.getInstance().getDispacher(currentTrack, stationPosition)).addTrain( this);
+            Station station = RailwaySystemFacade.getInstance().getStationOnPosition(currentTrack, stationPosition);
+            if( station.equals( RailwaySystemFacade.getInstance().getLastStationOn(currentTrack)) && currentDirection.isPositive() ){
+                currentDirection.changeDirection();
             }
-            else{
+            if( station.equals( RailwaySystemFacade.getInstance().getFirstStationOn(currentTrack)) && !currentDirection.isPositive() ){
+                currentDirection.changeDirection();
+            }
+            if( station.equals( targetStation ) ){ //Train has reached it's destination.
+                ((DefaultTrainDispacher) SimpleSimulation.getInstance().getDispacher(currentTrack, stationPosition)).addTrain(this);
+                SimpleSimulation.getInstance().removeDynamicTrain(this);
+                System.out.println( "destination reached" );
+            }
+           else{ //the train has reached a different station than it's destination.
                 long timePassed = getRequiredTimeToGo(stationPosition);
                 currentPosition = (SimplePosition)stationPosition;
-                long waitingTime = RailwaySystemFacade.getInstance().getWaitingTimeOf( currentTrack);
+                long waitingTime = RailwaySystemFacade.getInstance().getWaitingTimeOf(currentTrack);
+                timeInterval = timeInterval.truncateFromBeggining( timePassed );
                 if( waitingTime > elapsedTime){
-                    stationWaitTimeEnd = new SimpleTime( timeInterval.begin().getTimestamp()+waitingTime ); // TODO this is probably wrong.
-                    /* check if timeInterval.begin() is really what we are looking for.. */
+                    stationWaitTimeEnd = new SimpleTime( timeInterval.begin().getTimestamp()+waitingTime );
+                    waitingAtStation = true;
                 }
-                tick(timeInterval.truncateFromBeggining(timePassed + waitingTime));
+                else{
+                    timeInterval = timeInterval.truncateFromBeggining( waitingTime );
+                }
+                tick( timeInterval);
             }
         }
+    }
+
+    protected void moveEpsilon() {
+        currentPosition = new SimplePosition(  currentPosition.getDistance() + (2 * SimplePosition.EPSILON) * currentDirection.getCoefficent() );
     }
 
     private long getRequiredTimeToGo(Position target) {

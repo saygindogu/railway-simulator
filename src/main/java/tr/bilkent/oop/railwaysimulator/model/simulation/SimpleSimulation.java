@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.*;
 
 /**
  * Created by saygin on 4/19/2015.
@@ -24,6 +25,7 @@ public class SimpleSimulation implements Simulation {
     private transient List< DynamicTrain > dynamicTrains;
     private transient List< TrainDispacher > dispachers;
     private Queue<SimulationState> stateQueue;
+    private AbstractTime time;
 
 
     public void resetSimulation(){
@@ -51,11 +53,27 @@ public class SimpleSimulation implements Simulation {
     }
 
     public void simulateUntil(AbstractTime time) {
-        while( time.compareTo( currentTime) < 0 ){
-            tick();
+        this.time = time;
+        final ExecutorService service = Executors.newSingleThreadExecutor();
+
+        try
+        {
+            final Future<Object> f = service.submit(complicatedCalculation);
+
+            System.out.println(f.get( 1, TimeUnit.MINUTES));
         }
-        System.out.println( "last time in simulation:" +  currentTime.toString() );
-        System.out.println( "parameter in simulation:" + time);
+        catch (final TimeoutException e)
+        {
+            System.err.println("Calculation took to long");
+        }
+        catch ( Exception e){
+            System.out.println( "caught exception." );
+            e.printStackTrace();
+        }
+        finally
+        {
+            service.shutdown();
+        }
     }
 
     public Queue<SimulationState> getStateQueue() {
@@ -74,9 +92,8 @@ public class SimpleSimulation implements Simulation {
         SimpleTime now = (SimpleTime) currentTime;
         SimpleTime future = new SimpleTime(  now.getTimestamp() + timeInterval );
         TimeInterval interval = new TimeInterval( now, future);
-        for (DynamicTrain dynamicTrain : dynamicTrains) {
-            dynamicTrain.tick( interval);
-            System.out.println( "hop?" );
+        for ( int i = 0; i < dynamicTrains.size(); i++) {
+            dynamicTrains.get(i).tick(interval);
         }
         for (TrainDispacher dispacher : dispachers) {
             dispacher.tick( interval);
@@ -101,4 +118,25 @@ public class SimpleSimulation implements Simulation {
         return null;
 
     }
+
+    public void removeDynamicTrain(DynamicTrain dynamicTrain) {
+        dynamicTrains.remove( dynamicTrain);
+    }
+
+    public void destroy() {
+        instance = null;
+    }
+
+    static Callable<Object> complicatedCalculation
+            = new Callable<Object>()
+    {
+        public Object call() throws Exception
+        {
+            while( SimpleSimulation.getInstance().time.compareTo( SimpleSimulation.getInstance().currentTime) > 0 ){
+                SimpleSimulation.getInstance().tick();
+            }
+            return SimpleSimulation.getInstance();
+        }
+
+    };
 }

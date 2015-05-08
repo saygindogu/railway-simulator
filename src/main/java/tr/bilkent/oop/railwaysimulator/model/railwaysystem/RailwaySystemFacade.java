@@ -24,9 +24,10 @@ import java.util.List;
  * //TODO integration tests
  */
 public class RailwaySystemFacade {
-    private static RailwaySystemFacade instance;
+    private static RailwaySystemFacade instance = null;
     private RailwaySystem currentSystem;
     private User currentUser;
+    private List<TrainDispacher> dispachers = null;
 
     private RailwaySystemFacade(){
         currentSystem = null;
@@ -159,7 +160,7 @@ public class RailwaySystemFacade {
         if( isOnCurrentSystem( station) ){
             AbstractTimeTable timeTable;
             timeTable = SimpleTimeTable.DEFAULT;
-            station.addTimeTableOn( track, timeTable);
+            station.addTimeTableOn(track, timeTable);
         }
         else throw new NotOnCurrentSystemException();
     }
@@ -183,15 +184,20 @@ public class RailwaySystemFacade {
 
     public List<TrainDispacher> getDispachersOfTheSystem(){
         //TODO check simulate permissions
-        ArrayList<TrainDispacher> list = new ArrayList<TrainDispacher>();
-        for (Track track : currentSystem.getTracks()) {
-            for (Station station : track.getStations()) {
-                if( !station.getTrainQueueOn(track).isEmpty()){
-                    list.add( new DefaultTrainDispacher( track, station.getTrainQueueOn(track), station.getTimeTableOn(track), station.getPositionOn(track) ) );
+        if( dispachers == null){
+            ArrayList<TrainDispacher> list = new ArrayList<TrainDispacher>();
+            for (Track track : currentSystem.getTracks()) {
+                for (Station station : track.getStations()) {
+                    if( !station.getTrainQueueOn(track).isEmpty()){
+                        list.add( new DefaultTrainDispacher( track, station.getTrainQueueOn(track), station.getTimeTableOn(track), station.getPositionOn(track) ) );
+                    }
                 }
             }
+            dispachers = list;
+            return dispachers;
         }
-        return list;
+        else return dispachers;
+
 
     }
 

@@ -5,8 +5,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.*;
+import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
 import tr.bilkent.oop.railwaysimulator.model.user.User;
 
+import javax.swing.text.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +38,23 @@ public class RailwaySystemTest {
             stations.add( new Station( stationName ) );
         }
         for (Station station : stations) {
-            systemFacade.addStationTo( track, station, SimplePosition.ZERO);
+            systemFacade.addStationTo( track, station);
         }
         systemFacade.addNewTimeTableTo(track, systemFacade.getFirstStationOn(track));
+    }
+
+    @Test
+    public void positionCompareTest() throws Exception{
+        Position p1 = new SimplePosition( 10);
+        Position p2 = new SimplePosition( 30);
+        Position p3 = new SimplePosition( 10);
+
+        Assert.assertTrue( p1.compareTo(p2) < 0 )  ;
+        Assert.assertTrue( p2.compareTo(p1) > 0 )  ;
+        Assert.assertTrue( p1.compareTo(p1) == 0 )  ;
+        Assert.assertTrue( p3.compareTo(p1) == 0 )  ;
+        Assert.assertTrue( p1.equals(p1) )  ;
+        Assert.assertTrue( p3.equals(p1) )  ;
     }
 
     @Test
@@ -51,9 +67,9 @@ public class RailwaySystemTest {
         systemFacade.addNewTrainTo(track, systemFacade.getFirstStationOn(track));
         Station s = systemFacade.getFirstStationOn( track);
         systemFacade.addNewTrainTo( track, s);
-        Assert.assertTrue(s.getTrainQueueOn(track).size() == 1);
+        Assert.assertTrue( s.getTrainQueueOn(track).size() == 2);
         systemFacade.addNewTrainTo( track, s);
-        Assert.assertTrue(s.getTrainQueueOn(track).size() == 2);
+        Assert.assertTrue(s.getTrainQueueOn(track).size() == 3);
     }
 
     @Test

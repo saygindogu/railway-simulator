@@ -163,7 +163,7 @@ public class Track implements Serializable {
         SimpleDirection direction = SimpleDirection.getDirection( currentPosition, newPosition);
         if( direction.isPositive() ){
             for (Station station : stationList) {
-                if( station.getPositionOn(this).compareTo( currentPosition) > 0 )
+                if( station.getPositionOn(this).compareTo( currentPosition) >= 0 )
                     if( station.getPositionOn(this).compareTo( newPosition) < 0)
                         return station.getPositionOn(this);
                     else return null;

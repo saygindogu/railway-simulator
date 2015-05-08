@@ -13,7 +13,7 @@ public class TimeInterval {
     }
     public TimeInterval truncateFromBeggining( long time){
         if( time < interval.getValue().getTimeDistanceFrom(interval.getKey())  ){
-            return new TimeInterval( new SimpleTime( interval.getKey().getTimestamp() + time), interval.getValue() );
+            return new TimeInterval( new SimpleTime( interval.getKey().getTimestamp() - time), interval.getValue() );
         }
         else return new TimeInterval( interval.getValue(), interval.getValue() );
     }
