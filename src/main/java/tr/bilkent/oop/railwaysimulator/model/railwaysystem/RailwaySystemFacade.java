@@ -226,6 +226,7 @@ public class RailwaySystemFacade {
 
     public void logout(){
         currentUser = null;
+        dispachers = null;
     }
 
     public void createNewSystem() {
@@ -245,4 +246,7 @@ public class RailwaySystemFacade {
     }
 
 
+    public static void destroy() {
+        instance = null;
+    }
 }

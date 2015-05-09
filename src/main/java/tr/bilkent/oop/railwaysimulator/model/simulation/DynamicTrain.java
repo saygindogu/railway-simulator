@@ -92,7 +92,6 @@ public class DynamicTrain implements DynamicObject {
             if( station.equals( targetStation ) ){ //Train has reached it's destination.
                 ((DefaultTrainDispacher) SimpleSimulation.getInstance().getDispacher(currentTrack, stationPosition)).addTrain(this);
                 SimpleSimulation.getInstance().removeDynamicTrain(this);
-                System.out.println( "destination reached" );
             }
            else{ //the train has reached a different station than it's destination.
                 long timePassed = getRequiredTimeToGo(stationPosition);

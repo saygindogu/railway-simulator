@@ -43,6 +43,7 @@ public class SimulationTest{
         }
         systemFacade.addNewTimeTableTo(track, systemFacade.getFirstStationOn(track));
         systemFacade.addNewTrainTo(track, systemFacade.getFirstStationOn(track));
+        systemFacade.addNewTrainTo(track, systemFacade.getFirstStationOn(track));
     }
 
     @Test
@@ -61,8 +62,6 @@ public class SimulationTest{
         Assert.assertTrue(sim.getStateQueue().size() == 1);
         sim.tick();
 
-
-
         //TODO check why there is a second train that is being dispach
 
         //TODO observe multiple trains' behaviors.
@@ -72,11 +71,10 @@ public class SimulationTest{
     public void bigSimulateTest() throws Exception {
         SimpleSimulation sim = SimpleSimulation.getInstance();
         sim.simulate();
-        System.out.println( sim.getStateQueue().size() );
         int count = 0;
         for (SimulationState simulationState : sim.getStateQueue()) {
-            System.out.println( simulationState );
             if( count++ > 1000) break;
+            System.out.println( simulationState);
         }
         //TODO observe the code output here. The train is going in right speed but it is not stopping at the stations.
 
@@ -87,7 +85,7 @@ public class SimulationTest{
         user = null;
         stations = null;
         track = null;
-        systemFacade = null;
-        SimpleSimulation.getInstance().destroy();
+        RailwaySystemFacade.destroy();
+        SimpleSimulation.destroy();
     }
 }

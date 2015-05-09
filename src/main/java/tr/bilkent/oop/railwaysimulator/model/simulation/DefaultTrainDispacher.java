@@ -20,7 +20,8 @@ public class DefaultTrainDispacher implements TrainDispacher {
     SimpleTime now, future;
 
     public DefaultTrainDispacher(Track track, Queue<Train> trainQueue, AbstractTimeTable timetable, Position position) {
-        trains = trainQueue;
+        trains = new LinkedList<Train>();
+        trains.addAll( trainQueue );
         this.track = track;
         this.timeTable = timetable;
         this.position = position;
@@ -50,10 +51,7 @@ public class DefaultTrainDispacher implements TrainDispacher {
             dynamicTrain.moveEpsilon();
             now = new SimpleTime( now.getTimestamp() + 1);
             dynamicTrain.tick(new TimeInterval(now, future));
-            System.out.println(now);
-            System.out.println(future);
 
-            System.out.println( "dispach");
             //TODO the train is not added to the simulation's list or it is not saved to the state. Or it is immidiately removed. find out why and fix it.
         }
     }
