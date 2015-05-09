@@ -1,7 +1,9 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
+import tr.bilkent.oop.railwaysimulator.model.Observable;
 import tr.bilkent.oop.railwaysimulator.model.user.User;
 import tr.bilkent.oop.railwaysimulator.model.user.UserGroup;
+import tr.bilkent.oop.railwaysimulator.view.Observer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,22 +13,26 @@ import java.util.List;
 /**
  * Created by saygin on 4/19/2015.
  */
-public class RailwaySystem implements Serializable {
+public class RailwaySystem implements Serializable, Observable {
     private User owner;
     private UserGroup group;
     private RailwayPermissions permissions;
     private List<Track> tracks;
+    private transient List<Observer> observers;
 
     public RailwaySystem( User owner, UserGroup group, RailwayPermissions permissions ){
         this.owner = owner;
         this.group = group;
         this.permissions = permissions;
+        observers = new ArrayList<Observer>();
     }
 
     public RailwaySystem( User owner, RailwayPermissions permissions){
         this.owner = owner;
         this.group = null;
         this.permissions = permissions;
+        observers = new ArrayList<Observer>();
+
     }
 
     public RailwaySystem( User owner){
@@ -34,6 +40,8 @@ public class RailwaySystem implements Serializable {
         this.group = null;
         this.permissions = new RailwayPermissions(); //set permissions to default
         tracks = new ArrayList<Track>(1);
+        observers = new ArrayList<Observer>();
+
     }
 
     protected UserGroup getGroup() {
@@ -83,5 +91,21 @@ public class RailwaySystem implements Serializable {
         }
         return s + "}";
 
+    }
+
+    public void notifyChanges() {
+        for (Observer observer : observers) {
+            observer.update( this);
+        }
+
+    }
+
+    public void subscribe(Observer observer) {
+        observers.add( observer);
+
+    }
+
+    public void unsubscribe(Observer observer) {
+        observers.remove(observer);
     }
 }
