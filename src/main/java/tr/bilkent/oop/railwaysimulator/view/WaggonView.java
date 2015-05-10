@@ -1,7 +1,12 @@
 package tr.bilkent.oop.railwaysimulator.view;
 
+import javax.swing.*;
+
 /**
  * Created by saygin on 5/1/2015.
  */
-public class WaggonView {
+public class WaggonView extends JPanel{
+    public WaggonView(){
+        super();
+    }
 }
