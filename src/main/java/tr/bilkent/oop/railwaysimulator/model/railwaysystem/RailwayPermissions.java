@@ -26,9 +26,16 @@ public class RailwayPermissions implements Serializable {
     private boolean[] others;
 
     public RailwayPermissions( boolean[][] permissionMatrix ){
-        group = permissionMatrix[0];
-        others = permissionMatrix[1];
+
         //TODO copy these walues instead of using references to get more secure...
+
+        for(int i = 0; i < group.length; i++){
+            group[i] = permissionMatrix[0][i];
+        }
+
+        for(int i = 0; i < others.length; i++){
+            others[i] = permissionMatrix[1][i];
+        }
     }
 
     public RailwayPermissions(){
