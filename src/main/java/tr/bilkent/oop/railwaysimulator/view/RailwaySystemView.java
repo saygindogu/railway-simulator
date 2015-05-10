@@ -21,7 +21,12 @@ public class RailwaySystemView extends JPanel implements Observer
     public RailwaySystemView(){
         super();
         system = RailwaySystemFacade.getInstance().getCurrentSystem();
-        trackChose = new JComboBox<Track>( (Track[])RailwaySystemFacade.getInstance().getTracksOnSystem().toArray() );
+        Object[] temp = RailwaySystemFacade.getInstance().getTracksOnSystem().toArray();
+        Track[] tracks = new Track[temp.length];
+        for(int i = 0; i < temp.length; i++){
+            tracks[i] = (Track) temp[i];
+        }
+        trackChose = new JComboBox<Track>( tracks );
         Track selected = RailwaySystemFacade.getInstance().getTracksOnSystem().get( trackChose.getSelectedIndex() );
         trackView = new TrackView( selected);
         add( trackChose);
