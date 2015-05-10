@@ -1,4 +1,4 @@
-package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
+package tr.bilkent.oop.railwaysimulator.model.exception;
 
 import tr.bilkent.oop.railwaysimulator.model.exception.StationException;
 

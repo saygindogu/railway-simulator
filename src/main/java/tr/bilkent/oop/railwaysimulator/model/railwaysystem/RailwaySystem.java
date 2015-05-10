@@ -25,6 +25,7 @@ public class RailwaySystem implements Serializable, Observable {
         this.group = group;
         this.permissions = permissions;
         observers = new ArrayList<Observer>();
+        notifyChanges();
     }
 
     public RailwaySystem( User owner, RailwayPermissions permissions){
@@ -32,6 +33,7 @@ public class RailwaySystem implements Serializable, Observable {
         this.group = null;
         this.permissions = permissions;
         observers = new ArrayList<Observer>();
+        notifyChanges();
 
     }
 
@@ -41,6 +43,7 @@ public class RailwaySystem implements Serializable, Observable {
         this.permissions = new RailwayPermissions(); //set permissions to default
         tracks = new ArrayList<Track>(1);
         observers = new ArrayList<Observer>();
+        notifyChanges();
 
     }
 
@@ -58,10 +61,12 @@ public class RailwaySystem implements Serializable, Observable {
 
     protected void setGroup(UserGroup group) {
         this.group = group;
+        notifyChanges();
     }
 
     protected void setPermissions(RailwayPermissions permissions) {
         this.permissions = permissions;
+        notifyChanges();
     }
 
     protected RailwayPermissions getPermissions() {

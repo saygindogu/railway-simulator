@@ -7,9 +7,7 @@ import tr.bilkent.oop.railwaysimulator.model.railwaysystem.RailwaySystem;
 import tr.bilkent.oop.railwaysimulator.model.railwaysystem.RailwaySystemFacade;
 import tr.bilkent.oop.railwaysimulator.model.railwaysystem.Station;
 import tr.bilkent.oop.railwaysimulator.model.railwaysystem.Track;
-import tr.bilkent.oop.railwaysimulator.model.simulation.SimpleSimulation;
-import tr.bilkent.oop.railwaysimulator.model.simulation.SimulationState;
-import tr.bilkent.oop.railwaysimulator.model.simulation.TrainDispacher;
+import tr.bilkent.oop.railwaysimulator.model.simulation.*;
 import tr.bilkent.oop.railwaysimulator.model.user.User;
 
 import java.util.ArrayList;
@@ -47,6 +45,40 @@ public class SimulationTest{
     }
 
     @Test
+    public void multipleDispacherTest() throws Exception {
+        systemFacade.addNewTimeTableTo(track, systemFacade.getLastStationOn(track));
+        systemFacade.addNewTrainTo(track, systemFacade.getLastStationOn(track), new SimpleDirection(false) );
+        systemFacade.addNewTrainTo(track, systemFacade.getLastStationOn(track), new SimpleDirection(false) );
+
+        List<TrainDispacher> dispachers = RailwaySystemFacade.getInstance().getDispachersOfTheSystem();
+        Assert.assertTrue( dispachers.size() == 2);
+        Assert.assertTrue(dispachers.get(0).getPosition().equals(systemFacade.getStationPositionOnTrack(track, stations.get(0))));
+        Assert.assertTrue( dispachers.get(1).getPosition().equals(systemFacade.getStationPositionOnTrack(track, stations.get(4))));
+
+        SimpleSimulation sim = SimpleSimulation.getInstance();
+        sim.simulate();
+        int count = 0;
+        for (SimulationState simulationState : sim.getStateQueue()) {
+            if( count++ > -1) break;
+            System.out.println( simulationState);
+        }
+    }
+
+    @Test
+    public void customSimulationTest() throws Exception {
+        SimpleSimulation sim = SimpleSimulation.getInstance();
+        sim.setTimeInterval( new SimpleTime( 10000));
+        System.out.println( "hey!");
+        sim.simulate();
+        int count = 0;
+        for (SimulationState simulationState : sim.getStateQueue()) {
+            if( count++ > 1000) break;
+            System.out.println( simulationState);
+        }
+
+    }
+
+    @Test
     public void getDispacherTest() throws Exception {
         List<TrainDispacher> dispachers = RailwaySystemFacade.getInstance().getDispachersOfTheSystem();
         Assert.assertTrue( dispachers.size() == 1);
@@ -61,10 +93,6 @@ public class SimulationTest{
         sim.tick();
         Assert.assertTrue(sim.getStateQueue().size() == 1);
         sim.tick();
-
-        //TODO check why there is a second train that is being dispach
-
-        //TODO observe multiple trains' behaviors.
     }
 
     @Test
@@ -73,11 +101,9 @@ public class SimulationTest{
         sim.simulate();
         int count = 0;
         for (SimulationState simulationState : sim.getStateQueue()) {
-            if( count++ > 1000) break;
+            if( count++ > -1) break;
             System.out.println( simulationState);
         }
-        //TODO observe the code output here. The train is going in right speed but it is not stopping at the stations.
-
     }
 
     @After

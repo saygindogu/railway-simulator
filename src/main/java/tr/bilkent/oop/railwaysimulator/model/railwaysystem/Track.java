@@ -2,7 +2,6 @@ package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
 import javafx.util.Pair;
 import tr.bilkent.oop.railwaysimulator.model.exception.*;
-import tr.bilkent.oop.railwaysimulator.model.identity.StationIdentityFactory;
 import tr.bilkent.oop.railwaysimulator.model.simulation.AbstractTime;
 import tr.bilkent.oop.railwaysimulator.model.simulation.SimpleTime;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;

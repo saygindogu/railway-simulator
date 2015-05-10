@@ -5,10 +5,7 @@ import tr.bilkent.oop.railwaysimulator.model.exception.SessionAlreadyStartedExce
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Position;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.Train;
 import tr.bilkent.oop.railwaysimulator.model.railwaysimulation.TrainBuilder;
-import tr.bilkent.oop.railwaysimulator.model.simulation.AbstractTimeTable;
-import tr.bilkent.oop.railwaysimulator.model.simulation.DefaultTrainDispacher;
-import tr.bilkent.oop.railwaysimulator.model.simulation.SimpleTimeTable;
-import tr.bilkent.oop.railwaysimulator.model.simulation.TrainDispacher;
+import tr.bilkent.oop.railwaysimulator.model.simulation.*;
 import tr.bilkent.oop.railwaysimulator.model.user.User;
 import tr.bilkent.oop.railwaysimulator.model.user.UserGroup;
 
@@ -20,7 +17,7 @@ import java.util.List;
  * Created by saygin on 5/1/2015.
  *
  * Gateway to the RailwaySystem subsystem. This subsystem provides only this interface to outside.
- * //TODO check completenes.
+ *
  * //TODO integration tests
  */
 public class RailwaySystemFacade {
@@ -46,12 +43,14 @@ public class RailwaySystemFacade {
     public void initilizeNewSystemFor( User user){
         currentUser = user;
         currentSystem = new RailwaySystem( user);
+        currentSystem.notifyChanges();
     }
 
     public void initilizeSystemFor( User user, RailwaySystem system){
         //TODO check is user has read right
         currentUser = user;
         currentSystem = system;
+        currentSystem.notifyChanges();
     }
 
     public void setPermissionsOfSystem(){
@@ -74,6 +73,7 @@ public class RailwaySystemFacade {
         //TODO modify right check
         if( isOnCurrentSystem( track)){
             station.addThisTo(track, position);
+            currentSystem.notifyChanges();
         }
         else throw new NotOnCurrentSystemException();
     }
@@ -82,6 +82,7 @@ public class RailwaySystemFacade {
         //TODO modify right check
         if( isOnCurrentSystem( track)){
             station.addThisTo(track);
+            currentSystem.notifyChanges();
         }
         else throw new NotOnCurrentSystemException();
 
@@ -91,6 +92,7 @@ public class RailwaySystemFacade {
         //TODO modify right check
         if( isOnCurrentSystem( track)){
             station.removeThisFrom(track);
+            currentSystem.notifyChanges();
         }
         else throw new NotOnCurrentSystemException();
     }
@@ -116,6 +118,7 @@ public class RailwaySystemFacade {
 
     public void setUserGroup( UserGroup group ){
         currentSystem.setGroup( group );
+        currentSystem.notifyChanges();
     }
 
     public boolean isCurrentUserOwnerOfCurrentSystem(){
@@ -124,15 +127,15 @@ public class RailwaySystemFacade {
 
     public Track addNewTrackToCurrentSystem(){
         Track track = new Track( 50, 10); //TODO make these magic numbers constant so we can understand what the hell do those mean.
-        currentSystem
-                .getTracks()
-                .add(track);
+        currentSystem.getTracks().add(track);
+        currentSystem.notifyChanges();
         return track;
     }
 
     public void addNewTrackToCurrentSystem( Station station){
         Track track = new Track( 50, 10, station);
         currentSystem.getTracks().add(track);
+        currentSystem.notifyChanges();
     }
 
     public boolean isOnCurrentSystem( Track track){
@@ -144,15 +147,8 @@ public class RailwaySystemFacade {
     }
 
 
-    public void addNewTrainTo( Track track, Station station){
-        //TODO check modify rights
-        if( isOnCurrentSystem( station) ){
-            Train train;
-            TrainBuilder builder = new TrainBuilder();
-            train = builder.build();
-            station.addTrainOn(track, train);
-        }
-        else throw new NotOnCurrentSystemException();
+    public void addNewTrainTo( Track track, Station station) {
+        addNewTrainTo(track, station, new SimpleDirection(true));
     }
 
     public void addNewTimeTableTo(Track track, Station station) {
@@ -161,6 +157,7 @@ public class RailwaySystemFacade {
             AbstractTimeTable timeTable;
             timeTable = SimpleTimeTable.DEFAULT;
             station.addTimeTableOn(track, timeTable);
+            currentSystem.notifyChanges();
         }
         else throw new NotOnCurrentSystemException();
     }
@@ -169,6 +166,7 @@ public class RailwaySystemFacade {
         //TODO check modify rights
         if( isOnCurrentSystem( station) ){
             station.addTrainOn(track, train);
+            currentSystem.notifyChanges();
         }
         else throw new NotOnCurrentSystemException();
     }
@@ -248,5 +246,18 @@ public class RailwaySystemFacade {
 
     public static void destroy() {
         instance = null;
+    }
+
+    public void addNewTrainTo(Track track, Station station, Direction direction) {
+        //TODO check modify rights
+        if( isOnCurrentSystem( station) ){
+            Train train;
+            TrainBuilder builder = new TrainBuilder();
+            builder.withInitialDirection( direction);
+            train = builder.build();
+            station.addTrainOn(track, train);
+            currentSystem.notifyChanges();
+        }
+        else throw new NotOnCurrentSystemException();
     }
 }
