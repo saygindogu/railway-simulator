@@ -44,9 +44,9 @@ public class PersistencyTest {
 
         File file = new File( "railwaySystem");
         FileOutputStream fos = new FileOutputStream( file);
-        persistentDataSystem.saveRailwaySystem(RailwaySystemFacade.getInstance().getCurrentSystem(), fos);
+        PersistentDataSystem.saveRailwaySystem(RailwaySystemFacade.getInstance().getCurrentSystem(), fos);
         FileInputStream fis = new FileInputStream( file);
-        RailwaySystem loadedSys = persistentDataSystem.loadRailwaySystem(fis);
+        RailwaySystem loadedSys = PersistentDataSystem.loadRailwaySystem(fis);
         System.out.println( loadedSys);
         System.out.println( "System before save!");
         System.out.println( RailwaySystemFacade.getInstance().getCurrentSystem());
