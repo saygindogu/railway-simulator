@@ -1,9 +1,9 @@
 package tr.bilkent.oop.railwaysimulator.model;
 
+import tr.bilkent.oop.railwaysimulator.model.identity.Identity;
 import tr.bilkent.oop.railwaysimulator.model.identity.IdentityComparator;
 import tr.bilkent.oop.railwaysimulator.model.railwaysystem.RailwaySystem;
 import tr.bilkent.oop.railwaysimulator.model.user.User;
-import tr.bilkent.oop.railwaysimulator.model.identity.Identity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,17 +38,8 @@ public class RSim implements Serializable {
         return instance;
     }
 
-    public Set<Identity> getIdentityDatabase() {
-        return identityDatabase;
-    }
-
-    public List<User> getUserDatabase() {
-        return userDatabase;
-    }
-
-    public void addUser(User user) {
-        userDatabase.add( user);
-        currentUser = user;
+    protected static void setInstance( RSim newInstance){
+        instance = newInstance;
     }
 
     public static void destroy() {
@@ -59,8 +50,33 @@ public class RSim implements Serializable {
         instance = newInstance;
     }
 
+    public static void destroy() {
+        instance = null;
+    }
+
+    public Set<Identity> getIdentityDatabase() {
+        return identityDatabase;
+    }
+
+    public List<User> getUserDatabase() {
+        return userDatabase;
+    }
+
+    public void addUser(User user) {
+        userDatabase.add( user);
+    }
+
+    public void addUser(User user) {
+        userDatabase.add( user);
+        currentUser = user;
+    }
+
     public RailwaySystem getCurrentSystem() {
         return currentSystem;
+    }
+
+    public void setCurrentSystem(RailwaySystem currentSystem) {
+        this.currentSystem = currentSystem;
     }
 
     public User getCurrentUser() {
@@ -69,9 +85,5 @@ public class RSim implements Serializable {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
-    }
-
-    public void setCurrentSystem(RailwaySystem currentSystem) {
-        this.currentSystem = currentSystem;
     }
 }
