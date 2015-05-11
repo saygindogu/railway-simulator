@@ -196,8 +196,8 @@ public class RailwaySystemFacade {
 
     public Position getFirstStationPositionsBetween( Track track, Position currentPosition, Position newPosition) {
         //Done by Gizem - TODO read right check
-        if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.OPEN])
-            throw new RailwaySystemException();
+        /*if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.OPEN])
+            throw new RailwaySystemException();*/
 
         if( isOnCurrentSystem( track)){
             return track.getFirstStationPositionsBetween( currentPosition, newPosition );
@@ -207,8 +207,8 @@ public class RailwaySystemFacade {
 
     public List<TrainDispacher> getDispachersOfTheSystem(){
         //Done by Gizem - TODO check simulate permissions
-        if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.SIMULATE])
-            throw new RailwaySystemException();
+        /*if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.SIMULATE])
+            throw new RailwaySystemException();*/
 
         if( dispachers == null){
             ArrayList<TrainDispacher> list = new ArrayList<TrainDispacher>();
