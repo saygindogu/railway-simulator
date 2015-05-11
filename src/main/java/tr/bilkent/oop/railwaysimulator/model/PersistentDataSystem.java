@@ -1,4 +1,4 @@
-package tr.bilkent.oop.railwaysimulator.model.persistency;
+package tr.bilkent.oop.railwaysimulator.model;
 
 import tr.bilkent.oop.railwaysimulator.model.RSim;
 
@@ -9,12 +9,13 @@ import java.io.*;
  */
 public class PersistentDataSystem {
 
+    public String RSIM_DB_NAME = "RsimDatabase";
     RSim rSim;
     FileOutputStream fos;
 
     public PersistentDataSystem() throws IOException{
         rSim = RSim.getInstance();
-        fos = new FileOutputStream( new File( "RsimDatabase.db"));
+        fos = new FileOutputStream( new File( RSIM_DB_NAME));
     }
 
     public void saveSystem() throws IOException {
@@ -22,5 +23,12 @@ public class PersistentDataSystem {
 
         // Write object out to disk
         obj_out.writeObject ( rSim );
+    }
+
+    public void loadSystem() throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream( new File( RSIM_DB_NAME));
+        ObjectInputStream ois = new ObjectInputStream( fis);
+        rSim = (RSim) ois.readObject();
+        RSim.setInstance( rSim);
     }
 }

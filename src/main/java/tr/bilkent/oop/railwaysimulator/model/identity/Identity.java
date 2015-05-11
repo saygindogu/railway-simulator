@@ -1,9 +1,11 @@
 package tr.bilkent.oop.railwaysimulator.model.identity;
 
+import java.io.Serializable;
+
 /**
  * Created by saygin on 4/19/2015.
  */
-public class Identity {
+public class Identity implements Serializable{
     private long id;
     private IdentityType type;
 

@@ -1,5 +1,6 @@
 import org.junit.Test;
 import tr.bilkent.oop.railwaysimulator.model.RSim;
+import tr.bilkent.oop.railwaysimulator.model.PersistentDataSystem;
 import tr.bilkent.oop.railwaysimulator.model.user.User;
 
 /**
@@ -13,12 +14,14 @@ public class PersistencyTest {
         RSim.getInstance().addUser(new User("saygin", "saygin456"));
         RSim.getInstance().addUser(new User("mevlut", "mevlut789"));
         RSim.getInstance().addUser( new User( "elif", "elif91011" ) );
-
+        PersistentDataSystem persistentDataSystem = new PersistentDataSystem();
+        persistentDataSystem.saveSystem();
+        RSim.destroy();
+        persistentDataSystem.loadSystem();
         for (User user : RSim.getInstance().getUserDatabase()) {
-            System.out.println( user.toString() );
+            System.out.println( user);
         }
 
-        //hey
 
     }
 }
