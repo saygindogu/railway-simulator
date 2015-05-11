@@ -46,4 +46,8 @@ public class RSim implements Serializable {
     public List<User> getUserDatabase() {
         return userDatabase;
     }
+
+    public void addUser(User user) {
+        userDatabase.add( user);
+    }
 }
