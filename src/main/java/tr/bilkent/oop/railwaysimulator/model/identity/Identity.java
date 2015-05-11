@@ -38,5 +38,13 @@ public class Identity {
         result = 31 * result + getType().hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Identity{" +
+                "id=" + id +
+                ", type=" + type +
+                '}';
+    }
 }
 
