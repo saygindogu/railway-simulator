@@ -240,6 +240,11 @@ public class RailwaySystemFacade {
     public RailwaySystem getCurrentSystem() {
         return currentSystem;
     }
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+
 
     public Station getStationOnPosition(Track track, Position positionOnTrack) {
         if( isOnCurrentSystem( track) ){
