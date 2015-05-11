@@ -1,5 +1,6 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
+import tr.bilkent.oop.railwaysimulator.model.RSim;
 import tr.bilkent.oop.railwaysimulator.model.exception.NotOnCurrentSystemException;
 import tr.bilkent.oop.railwaysimulator.model.exception.RailwaySystemException;
 import tr.bilkent.oop.railwaysimulator.model.exception.SessionAlreadyStartedException;
@@ -45,6 +46,8 @@ public class RailwaySystemFacade {
         currentUser = user;
         currentSystem = new RailwaySystem( user);
         currentSystem.notifyChanges();
+        RSim.getInstance().setCurrentUser(user);
+        RSim.getInstance().setCurrentSystem( currentSystem);
     }
 
     public void initilizeSystemFor( User user, RailwaySystem system){
@@ -89,10 +92,11 @@ public class RailwaySystemFacade {
 
     public void addStationTo( Track track, Station station){
         // Done by Gizem - TODO modify right check
-        if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.MODIFY])
-            throw new RailwaySystemException();
-
-        if( isOnCurrentSystem( track)){
+        if( !isCurrentUserOwnerOfCurrentSystem()){
+            if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.MODIFY])
+                throw new RailwaySystemException();
+        }
+        if( isOnCurrentSystem(track)){
             station.addThisTo(track);
             currentSystem.notifyChanges();
         }
@@ -168,8 +172,8 @@ public class RailwaySystemFacade {
 
     public void addNewTimeTableTo(Track track, Station station) {
         //Done by Gizem - TODO check modify rights
-        if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.MODIFY])
-            throw new RailwaySystemException();
+       /* if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.MODIFY])
+            throw new RailwaySystemException();    */
 
         if( isOnCurrentSystem( station) ){
             AbstractTimeTable timeTable;
@@ -195,8 +199,8 @@ public class RailwaySystemFacade {
 
     public Position getFirstStationPositionsBetween( Track track, Position currentPosition, Position newPosition) {
         //Done by Gizem - TODO read right check
-        if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.OPEN])
-            throw new RailwaySystemException();
+        /*if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.OPEN])
+            throw new RailwaySystemException();*/
 
         if( isOnCurrentSystem( track)){
             return track.getFirstStationPositionsBetween( currentPosition, newPosition );
@@ -206,8 +210,8 @@ public class RailwaySystemFacade {
 
     public List<TrainDispacher> getDispachersOfTheSystem(){
         //Done by Gizem - TODO check simulate permissions
-        if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.SIMULATE])
-            throw new RailwaySystemException();
+        /*if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.SIMULATE])
+            throw new RailwaySystemException();*/
 
         if( dispachers == null){
             ArrayList<TrainDispacher> list = new ArrayList<TrainDispacher>();
@@ -282,8 +286,8 @@ public class RailwaySystemFacade {
 
     public void addNewTrainTo(Track track, Station station, Direction direction) {
         //Done by Gizem - TODO check modify rights
-        if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.OPEN])
-            throw new RailwaySystemException();
+        /*if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.OPEN])
+            throw new RailwaySystemException();   */
 
         if( isOnCurrentSystem( station) ){
             Train train;

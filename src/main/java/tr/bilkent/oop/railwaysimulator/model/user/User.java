@@ -4,10 +4,12 @@ import tr.bilkent.oop.railwaysimulator.model.exception.InvalidUserNameException;
 import tr.bilkent.oop.railwaysimulator.model.identity.Identity;
 import tr.bilkent.oop.railwaysimulator.model.identity.UserIdentityFactory;
 
+import java.io.Serializable;
+
 /**
  * Created by saygin on 4/19/2015.
  */
-public class User {
+public class User implements Serializable{
     private String name;
     private String password; //TODO use hash for this...
     private Identity identity;
@@ -69,6 +71,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "name='" + name + '\'' +
+                "id=" + identity.toString() +
                 '}';
     }
 }

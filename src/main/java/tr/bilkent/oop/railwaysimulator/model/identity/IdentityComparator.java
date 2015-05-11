@@ -1,11 +1,12 @@
 package tr.bilkent.oop.railwaysimulator.model.identity;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  * Created by saygin on 5/1/2015.
  */
-public class IdentityComparator implements Comparator{
+public class IdentityComparator implements Comparator, Serializable{
 
     public int compare(Object o1, Object o2){
         Identity i1, i2;
