@@ -18,6 +18,9 @@ public class StationIdentityFactory implements IdentityFactory {
 
         TreeSet<Identity> set = (TreeSet<Identity>)rsim.getIdentityDatabase();
         Identity lastStationId = set.lower(new Identity(-1, IdentityType.SIMULATION ));
+        if( lastStationId.getType() != IdentityType.STATION ){
+            lastStationId = null;
+        }
         Identity nextStationId;
         if( lastStationId != null){
             nextStationId = new Identity( lastStationId.getId()+1, IdentityType.STATION );

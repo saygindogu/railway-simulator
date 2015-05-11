@@ -31,4 +31,6 @@ public class PersistentDataSystem {
         rSim = (RSim) ois.readObject();
         RSim.setInstance( rSim);
     }
+
+    public void saveRailwaySystem( )
 }
