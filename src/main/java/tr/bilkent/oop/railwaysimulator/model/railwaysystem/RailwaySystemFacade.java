@@ -93,7 +93,7 @@ public class RailwaySystemFacade {
 
     public void addStationTo( Track track, Station station){
         // Done by Gizem - TODO modify right check
-        if( !currentUser.equals( currentSystem.getOwner())){
+        if( !isCurrentUserOwnerOfCurrentSystem()){
             if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.MODIFY])
                 throw new RailwaySystemException();
         }
