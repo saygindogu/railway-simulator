@@ -22,8 +22,8 @@ public class RSim implements Serializable {
     List<User> userDatabase;
     Set<Identity> identityDatabase;
 
-    RailwaySystem currentSystem;
-    User currentUser = null;
+    transient RailwaySystem currentSystem;
+    transient User currentUser = null;
 
 
     private RSim(){
@@ -45,5 +45,17 @@ public class RSim implements Serializable {
 
     public List<User> getUserDatabase() {
         return userDatabase;
+    }
+
+    public void addUser(User user) {
+        userDatabase.add( user);
+    }
+
+    public static void destroy() {
+        instance = null;
+    }
+
+    protected static void setInstance( RSim newInstance){
+        instance = newInstance;
     }
 }

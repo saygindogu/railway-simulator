@@ -1,6 +1,8 @@
 package tr.bilkent.oop.railwaysimulator.model.identity;
 
-public enum IdentityType{
+import java.io.Serializable;
+
+public enum IdentityType implements Serializable{
     USER(0), STATION(1), SIMULATION(2), NONE(100);
     private int value;
     IdentityType(int value) {
