@@ -1,5 +1,6 @@
 package tr.bilkent.oop.railwaysimulator.model.railwaysystem;
 
+import tr.bilkent.oop.railwaysimulator.model.RSim;
 import tr.bilkent.oop.railwaysimulator.model.exception.NotOnCurrentSystemException;
 import tr.bilkent.oop.railwaysimulator.model.exception.RailwaySystemException;
 import tr.bilkent.oop.railwaysimulator.model.exception.SessionAlreadyStartedException;
@@ -45,6 +46,8 @@ public class RailwaySystemFacade {
         currentUser = user;
         currentSystem = new RailwaySystem( user);
         currentSystem.notifyChanges();
+        RSim.getInstance().setCurrentUser(user);
+        RSim.getInstance().setCurrentSystem( currentSystem);
     }
 
     public void initilizeSystemFor( User user, RailwaySystem system){
