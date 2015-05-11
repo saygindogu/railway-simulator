@@ -38,21 +38,10 @@ public class RSim implements Serializable {
         return instance;
     }
 
-    protected static void setInstance( RSim newInstance){
-        instance = newInstance;
+    public static void setInstance(RSim instance) {
+        RSim.instance = instance;
     }
 
-    public static void destroy() {
-        instance = null;
-    }
-
-    protected static void setInstance( RSim newInstance){
-        instance = newInstance;
-    }
-
-    public static void destroy() {
-        instance = null;
-    }
 
     public Set<Identity> getIdentityDatabase() {
         return identityDatabase;
@@ -61,10 +50,7 @@ public class RSim implements Serializable {
     public List<User> getUserDatabase() {
         return userDatabase;
     }
-
-    public void addUser(User user) {
-        userDatabase.add( user);
-    }
+    
 
     public void addUser(User user) {
         userDatabase.add( user);
@@ -85,5 +71,9 @@ public class RSim implements Serializable {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public static void destroy() {
+        instance = null;
     }
 }
