@@ -30,8 +30,7 @@ public class RSim implements Serializable {
         userDatabase = new ArrayList<User>();
         identityDatabase = new TreeSet<Identity>( new IdentityComparator() );
     }
-
-
+    
     public static RSim getInstance() {
         if( instance == null){
             instance = new RSim();
@@ -49,6 +48,7 @@ public class RSim implements Serializable {
 
     public void addUser(User user) {
         userDatabase.add( user);
+        currentUser = user;
     }
 
     public static void destroy() {
@@ -57,5 +57,21 @@ public class RSim implements Serializable {
 
     protected static void setInstance( RSim newInstance){
         instance = newInstance;
+    }
+
+    public RailwaySystem getCurrentSystem() {
+        return currentSystem;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public void setCurrentSystem(RailwaySystem currentSystem) {
+        this.currentSystem = currentSystem;
     }
 }
