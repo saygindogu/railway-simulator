@@ -90,8 +90,8 @@ public class RailwaySystemFacade {
 
     public void addStationTo( Track track, Station station){
         // Done by Gizem - TODO modify right check
-        if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.MODIFY])
-            throw new RailwaySystemException();
+     /*   if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.MODIFY])
+            throw new RailwaySystemException();      */
 
         if( isOnCurrentSystem( track)){
             station.addThisTo(track);
@@ -169,8 +169,8 @@ public class RailwaySystemFacade {
 
     public void addNewTimeTableTo(Track track, Station station) {
         //Done by Gizem - TODO check modify rights
-        if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.MODIFY])
-            throw new RailwaySystemException();
+       /* if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.MODIFY])
+            throw new RailwaySystemException();    */
 
         if( isOnCurrentSystem( station) ){
             AbstractTimeTable timeTable;
@@ -278,8 +278,8 @@ public class RailwaySystemFacade {
 
     public void addNewTrainTo(Track track, Station station, Direction direction) {
         //Done by Gizem - TODO check modify rights
-        if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.OPEN])
-            throw new RailwaySystemException();
+        /*if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.OPEN])
+            throw new RailwaySystemException();   */
 
         if( isOnCurrentSystem( station) ){
             Train train;
