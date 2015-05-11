@@ -75,7 +75,6 @@ public class RailwaySystemFacade {
 
     }
 
-
     public void addStationTo( Track track, Station station, Position position){
         // Done by Gizem - TODO modify right check
         if (!currentSystem.getPermissions().getOthersPermissions()[RailwayPermissions.MODIFY])
@@ -230,6 +229,11 @@ public class RailwaySystemFacade {
     public RailwaySystem getCurrentSystem() {
         return currentSystem;
     }
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+
 
     public Station getStationOnPosition(Track track, Position positionOnTrack) {
         if( isOnCurrentSystem( track) ){

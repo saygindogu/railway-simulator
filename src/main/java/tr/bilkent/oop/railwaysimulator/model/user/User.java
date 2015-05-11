@@ -21,6 +21,8 @@ public class User {
         else throw new InvalidUserNameException();
     }
 
+
+
     public String getName() {
         return name;
     }
