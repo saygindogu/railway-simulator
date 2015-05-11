@@ -30,6 +30,8 @@ public class UserGroup {
 
     protected void addUser( User user){
         //TODO add user, getting his identity..
+        // by mevlut
+        users.add(user.getIdentity());
     }
 
     protected String getName() {

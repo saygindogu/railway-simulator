@@ -23,6 +23,8 @@ public class User implements Serializable{
         else throw new InvalidUserNameException();
     }
 
+
+
     public String getName() {
         return name;
     }
